@@ -10,14 +10,14 @@
         <link rel="stylesheet" href="/template_assets/css/backend.css">
         <link rel="stylesheet" href="/template_assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
         <link rel="stylesheet" href="/template_assets/vendor/remixicon/fonts/remixicon.css">
+        {{ encore_entry_link_tags('app') }}
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         <script defer src="/template_assets/js/backend-bundle.min.js"></script>
         <script defer src="/template_assets/js/app.js"></script>
+        {{ encore_entry_script_tags('app') }}
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
     <body class="  ">
