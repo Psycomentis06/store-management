@@ -1,3 +1,146 @@
+$iq-primary-100:#DDE5FF;
+$iq-primary-200:#BBCAFF;
+$iq-primary-300:#9AAEFF;
+$iq-primary-400:#8198FF;
+$iq-primary-500:#5773FF;
+$iq-primary-600:#3F56DB;
+$iq-primary-700:#2B3EB7;
+$iq-primary-800:#1B2993;
+$iq-primary-900:#101A7A;
+$iq-primary:$iq-primary-500;
+
+$iq-secondary-100:#F35421;
+$iq-secondary-200:#F35421;
+$iq-secondary-300:#F35421;
+$iq-secondary-400:#F35421;
+$iq-secondary-500:#F35421;
+$iq-secondary-600:#F35421;
+$iq-secondary-700:#F35421;
+$iq-secondary-800:#F35421;
+$iq-secondary-900:#F35421;
+$iq-secondary:$iq-secondary-500;
+
+$iq-success-100:#DEFCEC;
+$iq-success-200:#BDF9DF;
+$iq-success-300:#98EDD1;
+$iq-success-400:#7ADCC4;
+$iq-success-500:#50C6B4;
+$iq-success-600:#3AAAA3;
+$iq-success-700:#288B8E;
+$iq-success-800:#196772;
+$iq-success-900:#0F4D5F;
+$iq-success:$iq-success-500;
+
+$iq-info-100:#DCF9FE;
+$iq-info-200:#B9F0FE;
+$iq-info-300:#96E2FE;
+$iq-info-400:#7CD3FE;
+$iq-info-500:#51BBFE;
+$iq-info-600:#3B93DA;
+$iq-info-700:#286EB6;
+$iq-info-800:#194E93;
+$iq-info-900:#0F3779;
+$iq-info:$iq-info-500;
+
+$iq-warning-100:#FFF9DC;
+$iq-warning-200:#FFF1B9;
+$iq-warning-300:#FFE897;
+$iq-warning-400:#FFDE7D;
+$iq-warning-500:#FFCF52;
+$iq-warning-600:#DBAA3B;
+$iq-warning-700:#B78729;
+$iq-warning-800:#93671A;
+$iq-warning-900:#7A500F;
+$iq-warning:$iq-warning-500;
+
+$iq-danger-100:#931F1D;
+$iq-danger-200:#931F1D;
+$iq-danger-300:#931F1D;
+$iq-danger-400:#931F1D;
+$iq-danger-500:#931F1D;
+$iq-danger-600:#931F1D;
+$iq-danger-700:#931F1D;
+$iq-danger-800:#931F1D;
+$iq-danger-900:#931F1D;
+$iq-danger:$iq-danger-500;
+
+$iq-light-100:#F9DFD1;
+$iq-light-200:#F4BBA5;
+$iq-light-300:#DE8773;
+$iq-light-400:#BE574B;
+$iq-light-500:#c7cbd3;
+$iq-light-600:#7E151C;
+$iq-light-700:#690E1C;
+$iq-light-800:#55091B;
+$iq-light-900:#46051A;
+$iq-light:$iq-light-500;
+
+$iq-dark-100:#01041b;
+$iq-dark-200:#01041b;
+$iq-dark-300:#01041b;
+$iq-dark-400:#01041b;
+$iq-dark-500:#01041b;
+$iq-dark-600:#01041b;
+$iq-dark-700:#01041b;
+$iq-dark-800:#01041b;
+$iq-dark-900:#01041b;
+$iq-dark:$iq-dark-500;
+
+$iq-orange-100:#F35421;
+$iq-orange-200:#F35421;
+$iq-orange-300:#F35421;
+$iq-orange-400:#F35421;
+$iq-orange-500:#F35421;
+$iq-orange-600:#F35421;
+$iq-orange-700:#F35421;
+$iq-orange-800:#F35421;
+$iq-orange-900:#F35421;
+$iq-orange:$iq-orange-500;
+
+$iq-purple-100:#4731b6;
+$iq-purple-200:#4731b6;
+$iq-purple-300:#4731b6;
+$iq-purple-400:#4731b6;
+$iq-purple-500:#4731b6;
+$iq-purple-600:#4731b6;
+$iq-purple-700:#4731b6;
+$iq-purple-800:#4731b6;
+$iq-purple-900:#4731b6;
+$iq-purple:$iq-purple-500;
+
+$iq-skyblue-100:#158df7;
+$iq-skyblue-200:#158df7;
+$iq-skyblue-300:#158df7;
+$iq-skyblue-400:#158df7;
+$iq-skyblue-500:#158df7;
+$iq-skyblue-600:#158df7;
+$iq-skyblue-700:#158df7;
+$iq-skyblue-800:#158df7;
+$iq-skyblue-900:#158df7;
+$iq-skyblue:$iq-skyblue-500;
+
+$iq-light-gray-100:#f4f5fa;
+$iq-light-gray-200:#f4f5fa;
+$iq-light-gray-300:#f4f5fa;
+$iq-light-gray-400:#f4f5fa;
+$iq-light-gray-500:#f4f5fa;
+$iq-light-gray-600:#f4f5fa;
+$iq-light-gray-700:#f4f5fa;
+$iq-light-gray-800:#f4f5fa;
+$iq-light-gray-900:#f4f5fa;
+$iq-light-gray:$iq-light-gray-500;
+
+$iq-white-100:#fff;
+$iq-white-200:#fff;
+$iq-white-300:#fff;
+$iq-white-400:#fff;
+$iq-white-500:#fff;
+$iq-white-600:#fff;
+$iq-white-700:#fff;
+$iq-white-800:#fff;
+$iq-white-900:#fff;
+$iq-white:$iq-white-500;
+
 $color-theme: (
     "blue": #5773FF,
     "indigo": #6610f2,
@@ -25,17 +168,146 @@ $color-theme: (
 );
 
 $color-theme-iq: (
-    iq-primary:#5773FF,
-    iq-secondary:#F35421,
-    iq-success:#50C6B4,
-    iq-info:#51BBFE,
-    iq-warning:#FFCF52,
-    iq-danger:#931F1D,
-    iq-light:#c7cbd3,
-    iq-dark:#01041b,
-    iq-orange:#F35421,
-    iq-purple:#4731b6,
-    iq-skyblue:#158df7,
-    iq-light-gray:#f4f5fa,
-    iq-white:#fff,
+        iq-primary:$iq-primary,
+        iq-primary-100:$iq-primary-100,
+        iq-primary-200:$iq-primary-200,
+        iq-primary-300:$iq-primary-300,
+        iq-primary-400:$iq-primary-400,
+        iq-primary-500:$iq-primary-500,
+        iq-primary-600:$iq-primary-600,
+        iq-primary-700:$iq-primary-700,
+        iq-primary-800:$iq-primary-800,
+        iq-primary-900:$iq-primary-900,
+
+        iq-secondary:$iq-secondary,
+        iq-secondary-100:$iq-secondary-100,
+        iq-secondary-200:$iq-secondary-200,
+        iq-secondary-300:$iq-secondary-300,
+        iq-secondary-400:$iq-secondary-400,
+        iq-secondary-500:$iq-secondary-500,
+        iq-secondary-600:$iq-secondary-600,
+        iq-secondary-700:$iq-secondary-700,
+        iq-secondary-800:$iq-secondary-800,
+        iq-secondary-900:$iq-secondary-900,
+
+        iq-success:$iq-success,
+        iq-success-100:$iq-success-100,
+        iq-success-200:$iq-success-200,
+        iq-success-300:$iq-success-300,
+        iq-success-400:$iq-success-400,
+        iq-success-500:$iq-success-500,
+        iq-success-600:$iq-success-600,
+        iq-success-700:$iq-success-700,
+        iq-success-800:$iq-success-800,
+        iq-success-900:$iq-success-900,
+
+        iq-info:$iq-info,
+        iq-info-100:$iq-info-100,
+        iq-info-200:$iq-info-200,
+        iq-info-300:$iq-info-300,
+        iq-info-400:$iq-info-400,
+        iq-info-500:$iq-info-500,
+        iq-info-600:$iq-info-600,
+        iq-info-700:$iq-info-700,
+        iq-info-800:$iq-info-800,
+        iq-info-900:$iq-info-900,
+
+        iq-warning:$iq-warning,
+        iq-warning-100:$iq-warning-100,
+        iq-warning-200:$iq-warning-200,
+        iq-warning-300:$iq-warning-300,
+        iq-warning-400:$iq-warning-400,
+        iq-warning-500:$iq-warning-500,
+        iq-warning-600:$iq-warning-600,
+        iq-warning-700:$iq-warning-700,
+        iq-warning-800:$iq-warning-800,
+        iq-warning-900:$iq-warning-900,
+        
+        iq-danger:$iq-danger,
+        iq-danger-100:$iq-danger-100,
+        iq-danger-200:$iq-danger-200,
+        iq-danger-300:$iq-danger-300,
+        iq-danger-400:$iq-danger-400,
+        iq-danger-500:$iq-danger-500,
+        iq-danger-600:$iq-danger-600,
+        iq-danger-700:$iq-danger-700,
+        iq-danger-800:$iq-danger-800,
+        iq-danger-900:$iq-danger-900,
+        
+        iq-light:$iq-light,
+        iq-light-100:$iq-light-100,
+        iq-light-200:$iq-light-200,
+        iq-light-300:$iq-light-300,
+        iq-light-400:$iq-light-400,
+        iq-light-500:$iq-light-500,
+        iq-light-600:$iq-light-600,
+        iq-light-700:$iq-light-700,
+        iq-light-800:$iq-light-800,
+        iq-light-900:$iq-light-900,
+        
+        iq-dark:$iq-dark,
+        iq-dark-100:$iq-dark-100,
+        iq-dark-200:$iq-dark-200,
+        iq-dark-300:$iq-dark-300,
+        iq-dark-400:$iq-dark-400,
+        iq-dark-500:$iq-dark-500,
+        iq-dark-600:$iq-dark-600,
+        iq-dark-700:$iq-dark-700,
+        iq-dark-800:$iq-dark-800,
+        iq-dark-900:$iq-dark-900,
+
+        iq-orange:$iq-orange,
+        iq-orange-100:$iq-orange-100,
+        iq-orange-200:$iq-orange-200,
+        iq-orange-300:$iq-orange-300,
+        iq-orange-400:$iq-orange-400,
+        iq-orange-500:$iq-orange-500,
+        iq-orange-600:$iq-orange-600,
+        iq-orange-700:$iq-orange-700,
+        iq-orange-800:$iq-orange-800,
+        iq-orange-900:$iq-orange-900,
+        
+        iq-purple:$iq-purple,
+        iq-purple-100:$iq-purple-100,
+        iq-purple-200:$iq-purple-200,
+        iq-purple-300:$iq-purple-300,
+        iq-purple-400:$iq-purple-400,
+        iq-purple-500:$iq-purple-500,
+        iq-purple-600:$iq-purple-600,
+        iq-purple-700:$iq-purple-700,
+        iq-purple-800:$iq-purple-800,
+        iq-purple-900:$iq-purple-900,
+        
+        iq-skyblue:$iq-skyblue,
+        iq-skyblue-100:$iq-skyblue-100,
+        iq-skyblue-200:$iq-skyblue-200,
+        iq-skyblue-300:$iq-skyblue-300,
+        iq-skyblue-400:$iq-skyblue-400,
+        iq-skyblue-500:$iq-skyblue-500,
+        iq-skyblue-600:$iq-skyblue-600,
+        iq-skyblue-700:$iq-skyblue-700,
+        iq-skyblue-800:$iq-skyblue-800,
+        iq-skyblue-900:$iq-skyblue-900,
+        
+        iq-light-gray:$iq-light-gray,
+        iq-light-gray-100:$iq-light-gray-100,
+        iq-light-gray-200:$iq-light-gray-200,
+        iq-light-gray-300:$iq-light-gray-300,
+        iq-light-gray-400:$iq-light-gray-400,
+        iq-light-gray-500:$iq-light-gray-500,
+        iq-light-gray-600:$iq-light-gray-600,
+        iq-light-gray-700:$iq-light-gray-700,
+        iq-light-gray-800:$iq-light-gray-800,
+        iq-light-gray-900:$iq-light-gray-900,
+        
+        iq-white:$iq-white,
+        iq-white-100:$iq-white-100,
+        iq-white-200:$iq-white-200,
+        iq-white-300:$iq-white-300,
+        iq-white-400:$iq-white-400,
+        iq-white-500:$iq-white-500,
+        iq-white-600:$iq-white-600,
+        iq-white-700:$iq-white-700,
+        iq-white-800:$iq-white-800,
+        iq-white-900:$iq-white-900,
 );
