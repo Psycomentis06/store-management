@@ -28,6 +28,9 @@ class Role
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles')]
     private ArrayCollection $users;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $system = false;
+
     #[Pure] public function __construct()
     {
         $this->permissions = new ArrayCollection();
@@ -106,6 +109,18 @@ class Role
     public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
+        return $this;
+    }
+
+    public function getSystem(): ?bool
+    {
+        return $this->system;
+    }
+
+    public function setSystem(bool $system): self
+    {
+        $this->system = $system;
+
         return $this;
     }
 }
