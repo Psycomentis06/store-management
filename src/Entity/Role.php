@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\RoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
+
+#[ORM\Entity(repositoryClass: RoleRepository::class)]
+class Role
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
+
+    #[ORM\Column(type: 'string', length: 50, unique: true)]
+    private string $role;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $auto = false;
+
+    #[ORM\ManyToMany(targetEntity: Permission::class, inversedBy: 'roles')]
+    private ArrayCollection $permissions;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles')]
+    private ArrayCollection $users;
+
+    #[Pure] public function __construct()
+    {
+        $this->permissions = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getAuto(): ?bool
+    {
+        return $this->auto;
+    }
+
+    public function setAuto(bool $auto): self
+    {
+        $this->auto = $auto;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Permission>
+     */
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(Permission $permission): self
+    {
+        if (!$this->permissions->contains($permission)) {
+            $this->permissions[] = $permission;
+        }
+
+        return $this;
+    }
+
+    public function removePermission(Permission $permission): self
+    {
+        $this->permissions->removeElement($permission);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->users->removeElement($user);
+        return $this;
+    }
+}
