@@ -26,6 +26,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
+    #[ORM\OneToOne(targetEntity: UserMetadata::class, cascade: ['persist', 'remove'])]
+    private $metadata;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -107,5 +110,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getMetadata(): ?UserMetadata
+    {
+        return $this->metadata;
+    }
+
+    public function setMetadata(?UserMetadata $metadata): self
+    {
+        $this->metadata = $metadata;
+
+        return $this;
     }
 }
