@@ -29,6 +29,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(targetEntity: UserMetadata::class, cascade: ['persist', 'remove'])]
     private $metadata;
 
+    #[ORM\ManyToOne(targetEntity: UserState::class, inversedBy: 'users')]
+    private $state;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -120,6 +123,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMetadata(?UserMetadata $metadata): self
     {
         $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    public function getState(): ?UserState
+    {
+        return $this->state;
+    }
+
+    public function setState(?UserState $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }
