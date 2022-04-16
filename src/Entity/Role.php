@@ -46,8 +46,11 @@ class Role
 
     public function setRole(string $role): self
     {
-        $this->role = strtoupper('ROLE_' . $role);
-
+        if (str_starts_with($role, 'ROLE_')) {
+            $this->role = strtoupper($role);
+        } else {
+            $this->role = strtoupper('ROLE_' . $role);
+        }
         return $this;
     }
 
