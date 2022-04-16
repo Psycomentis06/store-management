@@ -23,6 +23,9 @@ class Permission
     #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions')]
     private ArrayCollection $roles;
 
+    #[ORM\OneToOne(mappedBy: 'permission', targetEntity: Route::class, cascade: ['persist', 'remove'])]
+    private $route;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -68,6 +71,28 @@ class Permission
         if ($this->roles->removeElement($role)) {
             $role->removePermission($this);
         }
+
+        return $this;
+    }
+
+    public function getRoute(): ?Route
+    {
+        return $this->route;
+    }
+
+    public function setRoute(?Route $route): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($route === null && $this->route !== null) {
+            $this->route->setPermission(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($route !== null && $route->getPermission() !== $this) {
+            $route->setPermission($this);
+        }
+
+        $this->route = $route;
 
         return $this;
     }
