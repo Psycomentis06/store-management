@@ -15,4 +15,9 @@ class IndexController extends AbstractController
             'controller_name' => 'IndexController',
         ]);
     }
+
+    #[Route('/login', name: 'app_login')]
+    public function login(): Response {
+        return $this->redirectToRoute('app_login_default');
+    }
 }
