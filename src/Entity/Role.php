@@ -19,9 +19,6 @@ class Role
     #[ORM\Column(type: 'string', length: 50, unique: true)]
     private string $role;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $auto = false;
-
     #[ORM\ManyToMany(targetEntity: Permission::class, inversedBy: 'roles')]
     private ArrayCollection $permissions;
 
@@ -49,19 +46,7 @@ class Role
 
     public function setRole(string $role): self
     {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getAuto(): ?bool
-    {
-        return $this->auto;
-    }
-
-    public function setAuto(bool $auto): self
-    {
-        $this->auto = $auto;
+        $this->role = strtoupper('ROLE_' . $role);
 
         return $this;
     }
