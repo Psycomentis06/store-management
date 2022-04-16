@@ -24,7 +24,7 @@ class Permission
     private ArrayCollection $roles;
 
     #[ORM\OneToOne(mappedBy: 'permission', targetEntity: Route::class, cascade: ['persist', 'remove'])]
-    private $route;
+    private Route $route;
 
     #[Pure] public function __construct()
     {
