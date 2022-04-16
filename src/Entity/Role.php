@@ -20,10 +20,10 @@ class Role
     private string $role;
 
     #[ORM\ManyToMany(targetEntity: Permission::class, inversedBy: 'roles')]
-    private ArrayCollection $permissions;
+    private Collection $permissions;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles')]
-    private ArrayCollection $users;
+    private Collection $users;
 
     #[ORM\Column(type: 'boolean')]
     private bool $system = false;
