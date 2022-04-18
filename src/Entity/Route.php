@@ -20,7 +20,6 @@ class Route
     private bool $system;
 
     #[ORM\OneToOne(inversedBy: 'route', targetEntity: Permission::class, cascade: ['persist', 'remove'])]
-    #[ORM\Column(unique: true)]
     private Permission $permission;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
