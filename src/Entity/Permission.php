@@ -21,7 +21,7 @@ class Permission
     private string $permission;
 
     #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'permissions')]
-    private ArrayCollection $roles;
+    private Collection $roles;
 
     #[ORM\OneToOne(mappedBy: 'permission', targetEntity: Route::class, cascade: ['persist', 'remove'])]
     private Route $route;
