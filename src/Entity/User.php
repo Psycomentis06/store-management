@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: UserState::class, inversedBy: 'users')]
     private $state;
 
+    #[ORM\Column(type: 'string', length: 100)]
+    private $email;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -137,6 +140,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setState(?UserState $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
