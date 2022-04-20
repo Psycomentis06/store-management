@@ -41,6 +41,22 @@ class Setup extends Command
     {
         $logger = new ConsoleLogger($output);
         $entityManager = $this->managerRegistry->getManager();
+
+        // Call sync permissions command
+        $permissionsCmd = $this->getApplication()->find('app:permissions:sync');
+        $returnCode = $permissionsCmd->run($input, $output);
+        if ($returnCode != Command::SUCCESS) {
+            $output->writeln('<error>\'app:permissions:sync\' returned ' . $returnCode . ' </error>');
+            return Command::FAILURE;
+        }
+        // Call sync routes command
+        $routesCmd = $this->getApplication()->find('app:routes:sync');
+        $returnCode = $routesCmd->run($input, $output);
+        if ($returnCode != Command::SUCCESS) {
+            $output->writeln('<error>\'app:permissions:sync\' returned ' . $returnCode . ' </error>');
+            return Command::FAILURE;
+        }
+
         $addedCounter = 0;
         $updatedCounter = 0;
         foreach ($this->DATA  as $item) {
@@ -77,13 +93,13 @@ class Setup extends Command
     {
         // Roles
         $userRole = new Role();
-        $userRole->setRole('a');
+        $userRole->setRole('superadmin');
         $userRole->setSystem(true);
         $this->DATA[] = $userRole;
 
         $superAdminRole = new Role();
         $superAdminRole->setSystem(true);
-        $superAdminRole->setRole('aa');
+        $superAdminRole->setRole('user');
         $this->DATA[] = $superAdminRole;
 
         // Permissions
