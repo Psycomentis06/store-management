@@ -4,6 +4,8 @@ namespace App\Exception;
 
 class AuthenticationException extends \Symfony\Component\Security\Core\Exception\AuthenticationException
 {
+
+    public const WRONG_PASSWORD = 4;
     public const SINGLE_SESSION = 3;
     public const FAILED_ATTEMPTS = 2;
     public const USER_NOTFOUND = 1;
