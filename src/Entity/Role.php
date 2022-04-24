@@ -111,4 +111,9 @@ class Role
 
         return $this;
     }
+
+    public function toString():string
+    {
+        return $this->role;
+    }
 }
