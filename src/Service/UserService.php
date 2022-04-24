@@ -76,7 +76,7 @@ class UserService
         $vKey = mt_rand(100000, 999999);
         $timeout = $this->kernel->getContainer()->getParameter('app.v_key_timeout');
         $timeout = empty($timeout) ? 900 : $timeout; # 15min default
-        $this->redis->set(\App\Utils\RedisKeys::getResetPasswordVKey($user->getId()), $vKey, $timeout);
+        $this->redis->set(\App\Utils\RedisKeys::getResetPasswordVKey($user->getUserIdentifier()), $vKey, $timeout);
         $container = $this->kernel->getContainer();
         $email = (new TemplatedEmail())
             ->from(new Address($container->getParameter('app.email_address'), $container->getParameter('app.email_sender')))
@@ -93,7 +93,7 @@ class UserService
      */
     public function verifyResetPassword(User $user, int $vKey): ?ResetPasswordException
     {
-        $redisVKey = $this->redis->get(\App\Utils\RedisKeys::getResetPasswordVKey($user->getId()));
+        $redisVKey = $this->redis->get(\App\Utils\RedisKeys::getResetPasswordVKey($user->getUserIdentifier()));
 
         $return = new ResetPasswordException("Invalid Verification Key");
 
