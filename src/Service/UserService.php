@@ -42,7 +42,7 @@ class UserService
 
     public function create(User $user): User
     {
-        $dbUser = $this->getUserByUsername($user->getUsername());
+        //$dbUser = $this->getUserByUsername($user->getUsername());
         //if (!empty($dbUser)) throw new UserAlreadyExistsException('There is a user in database with given username \' ' . $user->getUsername() . '\'');
         $hashedPassword = $this->userPasswordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($hashedPassword);
