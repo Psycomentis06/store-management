@@ -77,10 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        // guarantee every user at least has ROLE_USER
-        $this->roles[] = "ROLE_USER";
-
-        return array_unique((array)$this->roles);
+        return array_unique((array)$this->roles, SORT_REGULAR);
     }
 
     public function addRole(Role $role): self
