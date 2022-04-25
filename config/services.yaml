@@ -10,6 +10,7 @@ parameters:
     app.login_lock_duration: 900 # seconds
     app.login_lock_scale: 2 # if user lock his account for 1st time and lock it again after short time timeout * 2
     app.login_lock_scale_expire: 1200 # 30 min ( if account get locked again before this duration account lock duration became * app.login_lock_scale)
+    app.autologin_token_duration: 300 # 10 min
     app.email_address: '%env(EMAIL_ADDRESS)%'
     app.email_sender: '%env(EMAIL_SENDER)%'
 
