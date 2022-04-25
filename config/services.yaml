@@ -5,7 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.v_key_timeout: 900 # 15 minutes
-    app.login_attemps: 5
+    app.login_attempts: 5
+    app.login_attempts_expire: 1200
     app.login_lock_duration: 900 # seconds
     app.login_lock_scale: 2 # if user lock his account for 1st time and lock it again after short time timeout * 2
     app.login_lock_scale_expire: 1200 # 30 min ( if account get locked again before this duration account lock duration became * app.login_lock_scale)
