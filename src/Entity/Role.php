@@ -112,7 +112,7 @@ class Role
         return $this;
     }
 
-    public function toString():string
+    public function __toString():string
     {
         return $this->role;
     }
