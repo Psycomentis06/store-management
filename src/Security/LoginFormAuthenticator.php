@@ -11,13 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Uid\Uuid;
 
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -44,6 +43,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new Passport(
             new UserBadge($login),
             new CustomCredentials(function ($credentials, User $user) use ($request) {
+                $container = $this->kernel->getContainer();
                 // 1- Check if account locked
                 $lockedRedisKey = RedisKeys::getLoginLocked($user->getUserIdentifier());
                 $locked = $this->redis->get($lockedRedisKey);
@@ -57,13 +57,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
                 // 2- Check password
                 $isPassValid = $this->passwordHasher->isPasswordValid($user, $credentials);
                 if (!$isPassValid) {
-                    $container = $this->kernel->getContainer();
                     $failedAttemptsLimit = $container->getParameter('app.login_attempts');
                     $lockedTimesScale = $container->getParameter('app.login_lock_scale');
                     $lockDuration = $container->getParameter('app.login_lock_duration');
                     $failedAttemptsExpiration = $container->getParameter('app.login_attempts_expire');
                     $storedFailedAttempts = $this->redis->get(RedisKeys::getLoginFailedAttempts($user->getUserIdentifier()));
-                    $storedFailedAttempts = empty($storedFailedAttempts) ? 0 : $storedFailedAttempts ;
+                    $storedFailedAttempts = empty($storedFailedAttempts) ? 0 : $storedFailedAttempts;
                     $lockedTimes = $this->redis->get(RedisKeys::getLoginLockedTimes($user->getUserIdentifier()));
                     $lockedTimes = empty($lockedTimes) ? 0 : $lockedTimes;
                     // True means lock the account
@@ -84,7 +83,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
                 }
 
                 // 3- Check if there is session already
-                if (!empty($this->redis->get(RedisKeys::getSessionId($user->getUserIdentifier())))) throw new AuthenticationException('User Already logged in from other device', AuthenticationException::SINGLE_SESSION);
+                if (!empty($this->redis->get(RedisKeys::getSessionId($user->getUserIdentifier())))) {
+                    // Generate key for auto login
+                    $uuid = Uuid::v1();
+                    $this->redis->set(RedisKeys::getAutoLoginToken($user->getUserIdentifier()), $uuid, ['EX' => $container->getParameter('app.autologin_token_duration')]);
+                    throw new AuthenticationException('User Already logged in from other device', AuthenticationException::SINGLE_SESSION);
+                }
 
                 // Set session last ID
                 $request->request->set('userId', $user->getUserIdentifier());
