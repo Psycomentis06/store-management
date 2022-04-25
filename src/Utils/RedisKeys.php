@@ -28,4 +28,9 @@ class RedisKeys
     {
         return 'user:' . $userId . ':login:session';
     }
+
+    public static function getAutoLoginToken(string | int $userId): string
+    {
+        return 'user:' . $userId . ':login:auto_login_token';
+    }
 }
