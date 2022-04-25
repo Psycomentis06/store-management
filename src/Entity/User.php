@@ -74,16 +74,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      * Modified: instead of using JSON object we will use an Entity 'Role' for roles
+     * Return Array of roles as array of strings for Symfony Internals
      */
     public function getRoles(): array
     {
-        return array_unique((array)$this->roles, SORT_REGULAR);
+        $res = [];
+        foreach ($this->roles->toArray() as $role) {
+            $res[] = $role->getRole();
+        }
+        return array_unique($res);
+    }
+
+    public function getRolesObj(): ArrayCollection
+    {
+        return $this->roles;
     }
 
     public function addRole(Role $role): self
     {
         if (!$this->roles->contains($role)) {
-            $this->roles[] = $role;
+            $this->roles->add($role);
         }
         return $this;
     }
@@ -152,5 +162,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
     }
 }
