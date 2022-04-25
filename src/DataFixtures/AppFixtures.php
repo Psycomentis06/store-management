@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Role;
 use App\Entity\User;
 use App\Service\UserService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -19,9 +20,19 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $role = (new Role())
+            ->setRole('user');
+        $role2 = (new Role())
+            ->setRole('adn');
+        $manager->persist($role);
+        $manager->persist($role2);
+        $manager->flush();
+
         $user = (new User())
             ->setUsername("ali_amor")
             ->setEmail('ali@a.com')
+            ->addRole($role)
+            ->addRole($role2)
             ->setPassword('123456789');
         $this->userService->create($user);
     }
