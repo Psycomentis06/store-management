@@ -2,10 +2,14 @@
 
 namespace App\Controller\Main;
 
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 
 #[Route('/auth/')]
 class AuthController extends AbstractController
@@ -33,5 +37,11 @@ class AuthController extends AbstractController
     public function resetPassword(): Response
     {
         return $this->render('auth/reset_password.html.twig');
+    }
+
+    #[Route('auto_auth/{name}', name: 'app_auth_auto_auth')]
+    public function autoAuth(string $name, UserAuthenticatorInterface $authenticator, UserService $userService, AbstractLoginFormAuthenticator $formAuthenticator, Request $request): Response
+    {
+        return $authenticator->authenticateUser($userService->getUserByUsername($name), $formAuthenticator, $request);
     }
 }
