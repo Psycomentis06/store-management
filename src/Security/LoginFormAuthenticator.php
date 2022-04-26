@@ -6,11 +6,15 @@ use App\Entity\User;
 use App\Exception\AuthenticationException;
 use App\Repository\UserRepository;
 use App\Utils\RedisKeys;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -41,8 +45,15 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $csrfToken = $request->request->get('_csrf_token');
 
         return new Passport(
-            new UserBadge($login),
+            new UserBadge($login, function ($userIdentifier) {
+                $user = $this->userRepository->findOneByIdOrUsernameOrEmail($userIdentifier);
+                if (!$user instanceof UserInterface) {
+                    throw new UserNotFoundException("User $userIdentifier not found");
+                }
+                return $user;
+            }),
             new CustomCredentials(function ($credentials, User $user) use ($request) {
+                $request->request->set('userId', $user->getUserIdentifier());
                 $container = $this->kernel->getContainer();
                 // 1- Check if account locked
                 $lockedRedisKey = RedisKeys::getLoginLocked($user->getUserIdentifier());
@@ -85,14 +96,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
                 // 3- Check if there is session already
                 if (!empty($this->redis->get(RedisKeys::getSessionId($user->getUserIdentifier())))) {
                     // Generate key for auto login
-                    $uuid = Uuid::v1();
+                    $uuid = Uuid::v1()->toBase32();
                     $this->redis->set(RedisKeys::getAutoLoginToken($user->getUserIdentifier()), $uuid, ['EX' => $container->getParameter('app.autologin_token_duration')]);
                     throw new AuthenticationException('User Already logged in from other device', AuthenticationException::SINGLE_SESSION);
                 }
-
-                // Set session last ID
-                $request->request->set('userId', $user->getUserIdentifier());
-
                 return true;
             }, $password),
             [
@@ -105,6 +112,21 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         $this->redis->set(RedisKeys::getSessionId($request->request->get('userId')), $request->getSession()->getId());
         return null;
+    }
+
+    public function onAuthenticationFailure(Request $request, \Symfony\Component\Security\Core\Exception\AuthenticationException $exception): Response
+    {
+        if ($request->hasSession()) {
+            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        }
+        $url = $this->getLoginUrl($request);
+        if ($exception->getCode() === AuthenticationException::SINGLE_SESSION) {
+            $token = $this->redis->get(RedisKeys::getAutoLoginToken($request->request->get('userId')));
+            $login = $request->request->get('_username');
+            $url = "/auth/auto_auth?_username=$login&token=$token";
+        }
+
+        return new RedirectResponse($url);
     }
 
     protected function getLoginUrl(Request $request): string
