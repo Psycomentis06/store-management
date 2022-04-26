@@ -2,14 +2,10 @@
 
 namespace App\Controller\Main;
 
-use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 
 #[Route('/auth/')]
 class AuthController extends AbstractController
@@ -39,9 +35,19 @@ class AuthController extends AbstractController
         return $this->render('auth/reset_password.html.twig');
     }
 
-    #[Route('auto_auth/{name}', name: 'app_auth_auto_auth')]
-    public function autoAuth(string $name, UserAuthenticatorInterface $authenticator, UserService $userService, AbstractLoginFormAuthenticator $formAuthenticator, Request $request): Response
+    #[Route(
+        'auto_auth',
+        name: 'app_auth_auto_auth',
+        options: ["system" => "true"],
+        defaults: ["description" => "Automatically authenticate user based on tokens"]
+    )]
+    public function autoAuth(AuthenticationUtils $authenticationUtils): Response
     {
-        return $authenticator->authenticateUser($userService->getUserByUsername($name), $formAuthenticator, $request);
+        return $this->render(
+            'auth/error/single_session.html.twig',
+            [
+                'error' => $authenticationUtils->getLastAuthenticationError(),
+                'last_username' => $authenticationUtils->getLastUsername(),
+            ]);
     }
 }
