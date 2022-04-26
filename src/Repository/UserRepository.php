@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -63,11 +64,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+
     /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\NoResultException
+     * @throws NonUniqueResultException
      */
-    public function findOneByIdOrUsernameOrEmail(string | int $val)
+    public function findOneByIdOrUsernameOrEmail(string|int $val)
     {
         return $this->createQueryBuilder('u')
             ->orWhere('u.email = :val')
@@ -76,7 +77,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('val', $val)
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult(AbstractQuery::HYDRATE_SIMPLEOBJECT);
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
     // /**
