@@ -28,6 +28,6 @@ class IndexController extends AbstractController
         defaults: ["description" => "Redirect users to the real login page on url '/auth/login'"]
     )]
     public function login(): Response {
-        return $this->redirectToRoute('app_login_default');
+        return $this->redirectToRoute('app_auth_login');
     }
 }
