@@ -20,7 +20,7 @@
                                                 <br>
                                                 - Press continue to log in and disconnect automatically from other devices
                                             </p>
-                                            {% if (error and error.code == constant('App\Exception\AuthenticationException::SINGLE_SESSION')) %}
+                                            {% if (error and error.code == constant('App\\Exception\\AuthenticationException::SINGLE_SESSION')) %}
                                             <form action="{{ path('app_auth_auto_auth') }}" method="post" class="forms">
                                                 <input type="hidden" name="_username" value="">
                                                 <input type="hidden" name="_login_token" value="">
