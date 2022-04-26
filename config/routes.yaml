@@ -7,5 +7,5 @@ kernel:
     type: annotation
 
 app_logout:
-    path: /logout
+    path: /auth/logout
     methods: GET
