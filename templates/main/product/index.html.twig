@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product index{% endblock %}
+
+{% block body %}
+    <h1>Product index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Sku</th>
+                <th>Discount</th>
+                <th>Guarantee</th>
+                <th>Properties</th>
+                <th>Digital</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.discount }}</td>
+                <td>{{ product.guarantee ? product.guarantee|date('Y-m-d') : '' }}</td>
+                <td>{{ product.properties ? product.properties|json_encode : '' }}</td>
+                <td>{{ product.digital ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
+                    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_product_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,21 @@
+{{ form_start(form) }}
+    {# {{ form_label(form.properties) }}
+    {% for i in form.properties %}
+        <div class="row p-3">
+            <div class="col">
+                {{ form_label(i.key) }}
+                {{ form_errors(i.key) }}
+                {{ form_widget(i.key) }}
+                {{ form_help(i.key) }}
+            </div>
+            <div class="col">
+                {{ form_label(i.value) }}
+                {{ form_errors(i.value) }}
+                {{ form_widget(i.value) }}
+                {{ form_help(i.value) }}
+            </div>
+        </div>
+    {% endfor %}#}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
