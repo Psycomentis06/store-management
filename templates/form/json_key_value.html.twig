@@ -1,0 +1,16 @@
+{% block json_key_value_row %}
+    <div class="row p-3">
+        <div class="col">
+            {{ form_label(form.key) }}
+            {{ form_errors(form.key) }}
+            {{ form_widget(form.key) }}
+            {{ form_help(form.key) }}
+        </div>
+        <div class="col">
+            {{ form_label(form.value) }}
+            {{ form_errors(form.value) }}
+            {{ form_widget(form.value) }}
+            {{ form_help(form.value) }}
+        </div>
+    </div>
+{% endblock %}
