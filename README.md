@@ -12,3 +12,7 @@
     * Reset Password
     
     * Create Twig function | extension to determine if route accessible for current user
+
+    * Access controll
+
+    * Roles|Permissions protected routes
