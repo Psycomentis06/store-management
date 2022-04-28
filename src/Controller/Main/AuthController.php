@@ -18,7 +18,7 @@ class AuthController extends AbstractController
         defaults: ["description" => "Login in page"])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('auth/login.html.twig', [
+        return $this->render('main/auth/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'error' => $authenticationUtils->getLastAuthenticationError()
         ]);
@@ -32,7 +32,7 @@ class AuthController extends AbstractController
     )]
     public function resetPassword(): Response
     {
-        return $this->render('auth/reset_password.html.twig');
+        return $this->render('main/auth/reset_password.html.twig');
     }
 
     #[Route(
@@ -44,7 +44,7 @@ class AuthController extends AbstractController
     public function autoAuth(AuthenticationUtils $authenticationUtils): Response
     {
         return $this->render(
-            'auth/error/single_session.html.twig',
+            'main/auth/error/single_session.html.twig',
             [
                 'error' => $authenticationUtils->getLastAuthenticationError(),
                 'last_username' => $authenticationUtils->getLastUsername(),
