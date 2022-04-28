@@ -30,13 +30,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\OneToOne(targetEntity: UserMetadata::class, cascade: ['persist', 'remove'])]
-    private $metadata;
+    private UserMetadata $metadata;
 
     #[ORM\ManyToOne(targetEntity: UserState::class, inversedBy: 'users')]
-    private $state;
+    private UserState $state;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $email;
+    private string $email;
+
+    #[ORM\ManyToOne(targetEntity: DigitalPurchase::class, inversedBy: 'agent')]
+    private DigitalPurchase $digitalPurchase;
 
     #[Pure] public function __construct()
     {
@@ -167,5 +170,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->username;
+    }
+
+    public function getDigitalPurchase(): ?DigitalPurchase
+    {
+        return $this->digitalPurchase;
+    }
+
+    public function setDigitalPurchase(?DigitalPurchase $digitalPurchase): self
+    {
+        $this->digitalPurchase = $digitalPurchase;
+
+        return $this;
     }
 }
