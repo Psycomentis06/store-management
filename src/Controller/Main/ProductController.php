@@ -26,8 +26,11 @@ class ProductController extends AbstractController
     {
         $product = (new Product())
                         ->setProperties([
+                            ['key' => 'Key', 'value' => 'Value'],
+                            ['key' => 'Key', 'value' => 'Value'],
                             ['key' => 'Key', 'value' => 'Value']
                             ]);
+        //$product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
