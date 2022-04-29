@@ -14,6 +14,7 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setAttribute('id', 'abc')
             ->add('name')
             ->add('description')
             ->add('sku')
@@ -25,7 +26,10 @@ class ProductType extends AbstractType
                     'prototype' => true,
                     'allow_add' => true,
                     'allow_delete' => true,
-                    'entry_type' => JsonKeyValueType::class
+                    'entry_type' => JsonKeyValueType::class,
+                    'attr' => [
+                        'class' => 'json_key_value_form'
+                    ]
                 ])
             ->add('digital')
             ->add('images')

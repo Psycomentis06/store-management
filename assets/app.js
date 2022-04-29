@@ -10,3 +10,4 @@ import './styles/app.scss';
 
 // start the Stimulus application
 import './bootstrap';
+import './scripts/json_key_value_form_type';
