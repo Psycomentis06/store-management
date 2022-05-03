@@ -32,7 +32,7 @@ class ProductType extends AbstractType
                     ]
                 ])
             ->add('digital')
-            ->add('images')
+            ->add('images', SingleFilePicker::class)
         ;
     }
 
