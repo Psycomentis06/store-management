@@ -21,6 +21,7 @@ yarn-error.log
 
 ###< others
 /assets/template_assets/
+/public/uploads/
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
