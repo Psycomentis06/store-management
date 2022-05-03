@@ -1,0 +1,43 @@
+{% block single_file_picker_row %}
+    <fieldset class="form-group single-file-picker-form-row">
+        <legend class="col-form-label">{{ form_label(form.resources) }}</legend>
+        <div class="form-group">
+            <div class="col-sm-10">
+                {{ form_row(form.resources) }}
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                        data-target="#singleFilePicker">
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    Open File Picker
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <img src="" class="img-responsive" id="filePickerSelectedImage" alt="">
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="singleFilePicker" tabindex="-1" role="dialog" aria-labelledby="FileManagerModal">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="FileManagerModal">File Manager</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe id="single_file_picker_frame" style="border: 0"
+                                src="{{ path('file_manager', {module:1, conf:'products', view:'thumbnail', tree:0}) }}"
+                                width="100%" height="500"></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}

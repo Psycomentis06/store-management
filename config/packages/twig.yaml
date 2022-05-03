@@ -3,6 +3,7 @@ twig:
     form_themes:
         - 'bootstrap_4_layout.html.twig'
         - 'form/json_key_value.html.twig'
+        - 'form/single_file_picker.html.twig'
 
 when@test:
     twig:
