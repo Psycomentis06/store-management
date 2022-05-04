@@ -20,6 +20,10 @@
                 <td>{{ product.description }}</td>
             </tr>
             <tr>
+                <th>Images</th>
+                <td>{{ product.images | join(', ') }}</td>
+            </tr>
+            <tr>
                 <th>Sku</th>
                 <td>{{ product.sku }}</td>
             </tr>
