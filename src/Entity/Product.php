@@ -34,19 +34,18 @@ class Product
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $properties = [];
 
-    #[ORM\ManyToMany(targetEntity: Upload::class, inversedBy: 'physicalProducts')]
-    private Collection $images;
-
     #[ORM\Column(type: 'boolean')]
     private bool $digital;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductPrice::class)]
     private Collection $price;
 
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    private array $images = [];
+
     #[Pure] public function __construct()
     {
         $this->price = new ArrayCollection();
-        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -126,30 +125,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Upload>
-     */
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    public function addImage(Upload $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-        }
-
-        return $this;
-    }
-
-    public function removeImage(Upload $image): self
-    {
-        $this->images->removeElement($image);
-
-        return $this;
-    }
-
     public function getDigital(): ?bool
     {
         return $this->digital;
@@ -188,6 +163,18 @@ class Product
                 $price->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImages(): ?array
+    {
+        return $this->images;
+    }
+
+    public function setImages(?array $images): self
+    {
+        $this->images = $images;
 
         return $this;
     }
