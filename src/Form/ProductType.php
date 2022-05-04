@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,6 +16,7 @@ class ProductType extends AbstractType
             ->setAttribute('id', 'abc')
             ->add('name')
             ->add('description')
+            ->add('price')
             ->add('sku')
             ->add('discount')
             ->add('guarantee')
@@ -32,8 +32,7 @@ class ProductType extends AbstractType
                     ]
                 ])
             ->add('digital')
-            ->add('images', SingleFilePicker::class)
-        ;
+            ->add('images', SingleFilePicker::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

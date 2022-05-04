@@ -24,15 +24,15 @@ class Currency
     #[ORM\Column(type: 'string', length: 20)]
     private string $currencyFullName;
 
-    #[ORM\OneToMany(mappedBy: 'currency', targetEntity: ProductPrice::class)]
-    private Collection $productPrices;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $symbol;
 
-    #[Pure] public function __construct()
+    #[ORM\OneToMany(mappedBy: 'currency', targetEntity: Product::class)]
+    private $products;
+
+    public function __construct()
     {
-        $this->productPrices = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -64,36 +64,6 @@ class Currency
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProductPrice>
-     */
-    public function getProductPrices(): Collection
-    {
-        return $this->productPrices;
-    }
-
-    public function addProductPrice(ProductPrice $productPrice): self
-    {
-        if (!$this->productPrices->contains($productPrice)) {
-            $this->productPrices[] = $productPrice;
-            $productPrice->setCurrency($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProductPrice(ProductPrice $productPrice): self
-    {
-        if ($this->productPrices->removeElement($productPrice)) {
-            // set the owning side to null (unless already changed)
-            if ($productPrice->getCurrency() === $this) {
-                $productPrice->setCurrency(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getSymbol(): ?string
     {
         return $this->symbol;
@@ -102,6 +72,36 @@ class Currency
     public function setSymbol(?string $symbol): self
     {
         $this->symbol = $symbol;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setCurrency($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getCurrency() === $this) {
+                $product->setCurrency(null);
+            }
+        }
 
         return $this;
     }

@@ -37,16 +37,14 @@ class Product
     #[ORM\Column(type: 'boolean')]
     private bool $digital;
 
-    #[ORM\OneToMany(mappedBy: 'product', targetEntity: ProductPrice::class)]
-    private Collection $price;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private int $price = 0;
 
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private array $images = [];
 
-    #[Pure] public function __construct()
-    {
-        $this->price = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'products')]
+    private $currency;
 
     public function getId(): ?int
     {
@@ -137,33 +135,15 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProductPrice>
-     */
-    public function getPrice(): Collection
+
+    public function getPrice(): int
     {
         return $this->price;
     }
 
-    public function addPrice(ProductPrice $price): self
+    public function setPrice(int $price): self
     {
-        if (!$this->price->contains($price)) {
-            $this->price[] = $price;
-            $price->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removePrice(ProductPrice $price): self
-    {
-        if ($this->price->removeElement($price)) {
-            // set the owning side to null (unless already changed)
-            if ($price->getProduct() === $this) {
-                $price->setProduct(null);
-            }
-        }
-
+        $this->price = $price;
         return $this;
     }
 
@@ -175,6 +155,18 @@ class Product
     public function setImages(?array $images): self
     {
         $this->images = $images;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): self
+    {
+        $this->currency = $currency;
 
         return $this;
     }
