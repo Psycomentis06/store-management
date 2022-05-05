@@ -30,7 +30,7 @@
         <div class="wrapper">
             <div class="iq-sidebar  sidebar-default ">
                 <div class="iq-sidebar-logo d-flex align-items-center">
-                    <a href="#" class="header-logo">
+                    <a href="{{ path('app_index') }}" class="header-logo">
                         <img src="{{ asset('/template_assets/images/logo.svg') }}" alt="logo">
                         <h3 class="logo-title light-logo ">Flysat</h3>
                     </a>
@@ -60,15 +60,17 @@
                                     <i class="las la-angle-right iq-arrow-right arrow-active"></i>
                                     <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                                 </a>
-                                <ul id="products" class="iq-submenu collapse" data-parent="#otherpage">
+                                <ul id="products" class="iq-submenu collapse">
                                     <li class="{{ is_route_active('app_product_index') }}">
                                         <a href={{ path('app_product_index') }}>
-                                            <i class="las la-minus"></i><span>Products</span>
+                                            <i class="ri-product-hunt-line" style="font-size: x-large"></i>
+                                            <span>Products</span>
                                         </a>
                                     </li>
                                     <li class="{{ is_route_active('app_currency_index') }}">
                                         <a href="{{ path('app_currency_index') }}">
-                                            <i class="las la-minus"></i><span>Currency</span>
+                                            <i class="las la-yen-sign" style="font-size: x-large"></i>
+                                            <span>Currency</span>
                                         </a>
                                     </li>
                                 </ul>
