@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Currency;
 use App\Entity\Product;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +19,14 @@ class ProductType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('price')
+            ->add(
+                'currency',
+                EntityType::class,
+                [
+                    'class' => Currency::class,
+                    //'choice_label' => 'currency'
+                ]
+            )
             ->add('sku')
             ->add('discount')
             ->add('guarantee')
