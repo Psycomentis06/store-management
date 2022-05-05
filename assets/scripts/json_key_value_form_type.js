@@ -2,7 +2,7 @@
  * Script to create the add remove fields
  */
 
-window.onload = () => {
+window.addEventListener('load', () => {
     const formContainer = document.querySelectorAll('.json_key_value_form');
     for (let i = 0; i < formContainer.length; i++) {
         const prototype = formContainer[i].getAttribute('data-prototype');
@@ -24,7 +24,7 @@ window.onload = () => {
             row.appendChild(deleteButton(row))
         }
     }
-}
+})
 
 function addButton(container, itemNumber) {
     const addButton = document.createElement('button');

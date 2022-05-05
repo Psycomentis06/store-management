@@ -8,7 +8,7 @@
         $('#myModal').modal('hide')
     });
 });*/
-window.onload = () => {
+window.addEventListener('load', () => {
     const singleFilePickerFrames = <HTMLIFrameElement>document.getElementById('single_file_picker_frame');
     const inputField = <HTMLInputElement>document.querySelector('.single-file-picker-form-row input')
     const selectedImgPreview = <HTMLImageElement>document.getElementById('filePickerSelectedImage')
@@ -33,4 +33,4 @@ window.onload = () => {
                 })
             }
         }
-}
+})
