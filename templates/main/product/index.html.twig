@@ -3,8 +3,10 @@
 {% block title %}Product index{% endblock %}
 
 {% block body %}
-    <h1>Products Page</h1>
-
+    <div class="my-2">
+        <h1 class="my-2">Products Page</h1>
+        <a class="btn btn-primary" href="{{ path('app_product_new') }}">Create new</a>
+    </div>
     <table class="table">
         <thead>
             <tr>

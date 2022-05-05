@@ -3,8 +3,10 @@
 {% block title %}Currency index{% endblock %}
 
 {% block body %}
-    <h1>Currency Page</h1>
-
+    <div class="my-2">
+        <h1 class="my-2">Currency Page</h1>
+        <a class="btn btn-primary" href="{{ path('app_currency_new') }}">Create new</a>
+    </div>
     <table class="table">
         <thead>
             <tr>
