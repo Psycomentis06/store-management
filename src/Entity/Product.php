@@ -28,8 +28,8 @@ class Product
     #[ORM\Column(type: 'smallint', nullable: true)]
     private int $discount = 0;
 
-    #[ORM\Column(type: 'date', nullable: true)]
-    private ?\DateTimeInterface $guarantee;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private int $guarantee = 0;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $properties = [];
@@ -44,7 +44,7 @@ class Product
     private array $images = [];
 
     #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'products')]
-    private $currency;
+    private Currency $currency;
 
     public function getId(): ?int
     {
@@ -99,12 +99,12 @@ class Product
         return $this;
     }
 
-    public function getGuarantee(): ?\DateTimeInterface
+    public function getGuarantee(): ?int
     {
         return $this->guarantee;
     }
 
-    public function setGuarantee(?\DateTimeInterface $guarantee): self
+    public function setGuarantee(?int $guarantee): self
     {
         $this->guarantee = $guarantee;
 

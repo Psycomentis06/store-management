@@ -7,6 +7,7 @@ use App\Entity\Product;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,7 +30,12 @@ class ProductType extends AbstractType
             )
             ->add('sku')
             ->add('discount')
-            ->add('guarantee')
+            ->add(
+                'guarantee',
+                IntegerType::class,
+                [
+                    'label' => 'Currency (Months)'
+                ])
             ->add('properties',
                 CollectionType::class,
                 [

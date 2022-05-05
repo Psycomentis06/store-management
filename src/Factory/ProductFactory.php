@@ -43,7 +43,7 @@ final class ProductFactory extends ModelFactory
             'description' => self::faker()->text(),
             'sku' => self::faker()->text(10),
             'discount' => self::faker()->numberBetween(1, 32767),
-            'guarantee' => self::faker()->datetime(),
+            'guarantee' => self::faker()->numberBetween(0, 36),
             'properties' => [],
             'digital' => self::faker()->boolean(),
             'price' => self::faker()->randomNumber(),
