@@ -41,8 +41,8 @@
                 <div class="data-scrollbar" data-scroll="1">
                     <nav class="iq-sidebar-menu">
                         <ul id="iq-sidebar-toggle" class="iq-menu">
-                            <li class="active">
-                                <a href="#" class="svg-icon">
+                            <li class="{{ app.request.get('_route') == 'app_index' ? 'active' : '' }}">
+                                <a href="{{ path('app_index') }}" class="svg-icon">
                                     <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -50,23 +50,46 @@
                                     <span class="ml-4">Dashboards</span>
                                 </a>
                             </li>
-                            <li class="">
-                                <a href="{{ path('app_product_index') }}" class="svg-icon">
+                            <li class=" ">
+                                <a href="#products" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
                                     <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                                     </svg>
                                     <span class="ml-4">Products</span>
+                                    <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                    <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                                 </a>
+                                <ul id="products" class="iq-submenu collapse" data-parent="#otherpage">
+                                    <li class="{{ app.request.get('_route') == 'app_product_index' ? 'active' : '' }}">
+                                        <a href={{ path('app_product_index') }}>
+                                            <i class="las la-minus"></i><span>Products</span>
+                                        </a>
+                                    </li>
+                                    <li class="{{ app.request.get('_route') == 'app_currency_index' ? 'active' : '' }}">
+                                        <a href="{{ path('app_currency_index') }}">
+                                            <i class="las la-minus"></i><span>Currency</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="">
-                                <a href="#" class="svg-icon">
+                                <a href="#otherpage" class="collapsed" data-toggle="collapse" aria-expanded="false">
                                     <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                                         <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                                     </svg>
                                     <span class="ml-4">Task</span>
+                                    <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                    <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                                 </a>
+                                <ul id="currency" class="iq-submenu collapse" data-parent="#otherpage">
+                                    <li class="">
+                                        <a href="#">
+                                            <i class="las la-minus"></i><span>Currency</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="">
                                 <a href="#" class="svg-icon">
