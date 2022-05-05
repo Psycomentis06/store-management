@@ -24,13 +24,13 @@ class ProductController extends AbstractController
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProductRepository $productRepository): Response
     {
-        $product = (new Product())
+        /*$product = (new Product())
                         ->setProperties([
                             ['key' => 'Key', 'value' => 'Value'],
                             ['key' => 'Key', 'value' => 'Value'],
                             ['key' => 'Key', 'value' => 'Value']
-                            ]);
-        //$product = new Product();
+                            ]);*/
+        $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
