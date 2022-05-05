@@ -19,18 +19,18 @@ class Currency
     private int $id;
 
     #[ORM\Column(type: 'string', length: 3)]
-    private string $currency;
+    private string $currency = '';
 
     #[ORM\Column(type: 'string', length: 20)]
-    private string $currencyFullName;
+    private string $currencyFullName = '';
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private string $symbol;
+    private string $symbol = '';
 
     #[ORM\OneToMany(mappedBy: 'currency', targetEntity: Product::class)]
-    private $products;
+    private Collection $products;
 
-    public function __construct()
+    #[Pure] public function __construct()
     {
         $this->products = new ArrayCollection();
     }
@@ -104,5 +104,10 @@ class Currency
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->symbol . ' : ' . strtoupper($this->currency) . ' - ' . $this->currencyFullName;
     }
 }
