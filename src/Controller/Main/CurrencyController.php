@@ -33,7 +33,7 @@ class CurrencyController extends AbstractController
             return $this->redirectToRoute('app_currency_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('currency/new.html.twig', [
+        return $this->renderForm('/main/currency/new.html.twig', [
             'currency' => $currency,
             'form' => $form,
         ]);
@@ -58,7 +58,7 @@ class CurrencyController extends AbstractController
             return $this->redirectToRoute('app_currency_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('currency/edit.html.twig', [
+        return $this->renderForm('/main/currency/edit.html.twig', [
             'currency' => $currency,
             'form' => $form,
         ]);
