@@ -61,6 +61,10 @@ Encore
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()
 
+    .enableVueLoader(() => {}, {
+        useJsx: true
+    })
+
     // uncomment if you use React
     //.enableReactPreset()
 

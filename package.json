@@ -4,8 +4,11 @@
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/webpack-encore": "^1.7.0",
         "@types/jquery": "^3.5.14",
+        "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+        "@vue/babel-preset-jsx": "^1.2.4",
         "core-js": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
+        "vue-loader": "^17.0.0",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -18,9 +21,11 @@
     },
     "dependencies": {
         "@types/bootstrap": "^4.5.0",
+        "loader": "^2.1.1",
         "sass": "^1.49.11",
         "sass-loader": "^12.6.0",
         "ts-loader": "^9.3.0",
-        "typescript": "^4.6.4"
+        "typescript": "^4.6.4",
+        "vue": "^3.2.33"
     }
 }
