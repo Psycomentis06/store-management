@@ -13,12 +13,12 @@ window.addEventListener('load', () => {
     const inputField = <HTMLInputElement>document.querySelector('.single-file-picker-form-row input')
     const selectedImgPreview = <HTMLImageElement>document.getElementById('filePickerSelectedImage')
     // If there is already data inside input
-    if (inputField.value.length > 0) {
+    if (inputField?.value?.length > 0) {
         selectedImgPreview.setAttribute('src', inputField.value)
         selectedImgPreview.setAttribute('style', 'object-fit: cover; width: 300px;height: 500px')
     }
     const selectField = singleFilePickerFrames.contentDocument?.querySelectorAll('.select')
-        if (selectField) {
+        if (selectField && selectField.length > 0) {
             for (let j = 0; j < selectField.length; j++) {
                 const item = selectField[j]
                 item.addEventListener('click', evt => {

@@ -1,10 +1,17 @@
 <template>
-  <h1>Hi From Vue</h1>
+  <ModalButton />
+  <SearchModal />
 </template>
 
-<script>
+<script lang="ts">
+import SearchModal from './components/SearchModal.vue';
+import ModalButton from './components/ModalButton.vue';
 export default {
-  name: "App"
+  name: "App",
+  components: {
+    SearchModal,
+    ModalButton
+  }
 }
 </script>
 
