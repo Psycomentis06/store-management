@@ -32,6 +32,7 @@ services:
             - '../src/Kernel.php'
             - '../src/Utils'
             - '../src/Exception'
+            - '../src/_Interface'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
