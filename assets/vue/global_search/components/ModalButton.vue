@@ -3,12 +3,13 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue'
+export default  defineComponent({
   name: "ModalButton",
   mounted() {
     const modalSelector = $('#search-modal');
     if (window.location.hash === '#global-search') {
-      modalSelector.appendTo("body").modal('show');
+      this.openModal();
     }
 
     modalSelector.on('shown.bs.modal', function () {
@@ -27,7 +28,7 @@ export default {
       $('search-modal').modal('hide')
     },
   }
-}
+})
 </script>
 
 <style lang="scss">
