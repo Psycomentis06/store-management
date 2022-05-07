@@ -28,6 +28,7 @@ class SearchController extends AbstractController
     )]
     public function index(): Response
     {
+        dd($this->entitySearchService->findEntitiesByName(''));
         return new Response('Search Page');
     }
 }
