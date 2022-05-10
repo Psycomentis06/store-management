@@ -75,15 +75,26 @@ class EntitySearchService
         return 'App\Entity\\' . $name;
     }
 
-    public function findEntitiesByName(string $name = ""): array
+    public function findEntitiesByName(string $name = "", bool $associativeArray = false): array
     {
         $entitiesDirPath = $this->getEntitiesDirPath();
         $entityClasses = scandir($entitiesDirPath);
-        foreach ($entityClasses as $key => $c) {
-            $entityClasses[$key] = str_replace('.php', '', $c);
+        if ($associativeArray) {
+            foreach ($entityClasses as $key => $c) {
+                $entityClasses[$key] = str_replace('.php', '', $c);
+            }
+            return array_filter($entityClasses, function ($c) use ($name) {
+                return !str_starts_with($c, '.') && preg_match("/(?i)($name)/", $c);
+            });
+        } else {
+            $res = [];
+            foreach ($entityClasses as $key => $c) {
+                if (!str_starts_with($c, '.') && preg_match("/(?i)($name)/", $c)) {
+                    $c = str_replace('.php', '', $c);
+                    $res[] = $c;
+                }
+            }
+            return $res;
         }
-        return array_filter($entityClasses, function ($c) use ($name) {
-            return !str_starts_with($c, '.') && preg_match("/(?i)($name)/", $c);
-        });
     }
 }
