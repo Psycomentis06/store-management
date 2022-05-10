@@ -3,20 +3,21 @@
 namespace App\Service\Search;
 
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\RouterInterface;
 
 class RouteSearchService
 {
-    private RouteCollection $routeCollection;
+    private RouterInterface $router;
 
-    public function __construct(RouteCollection $routeCollection)
+    public function __construct(RouterInterface $router)
     {
-        $this->routeCollection = $routeCollection;
+        $this->router = $router;
     }
 
     public function findAllByNameLike(string $name): array
     {
         $res = [];
-        $routes = $this->routeCollection->all();
+        $routes = $this->router->getRouteCollection()->all();
         foreach ($routes as $routeName => $route) {
             if (preg_match("($name)", $routeName)) $res[] = $route;
         }
