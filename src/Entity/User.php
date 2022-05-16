@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -182,5 +183,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->digitalPurchase = $digitalPurchase;
 
         return $this;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'username';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->username;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return '';
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return null;
     }
 }

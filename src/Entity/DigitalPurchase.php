@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\DigitalPurchaseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: DigitalPurchaseRepository::class)]
-class DigitalPurchase
+class DigitalPurchase implements SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -34,6 +35,7 @@ class DigitalPurchase
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'digitalPurchases')]
     private Customer $consumer;
 
+    #TODO change to OneToMany instead & Add production relation
     #[ORM\OneToMany(mappedBy: 'digitalPurchase', targetEntity: User::class)]
     private Collection $agent;
 
@@ -163,5 +165,26 @@ class DigitalPurchase
         $this->credentials = $credentials;
 
         return $this;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'date';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->id;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return $this->consumer->getSearchCardBody() . ' : ' . $this->quantity;
+    }
+
+    # TODO Change with product image later
+    public function getSearchCardImage(): ?string
+    {
+        return null;
     }
 }

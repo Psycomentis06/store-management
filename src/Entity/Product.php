@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-class Product
+class Product implements SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -169,5 +167,25 @@ class Product
         $this->currency = $currency;
 
         return $this;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'name';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->name;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return $this->description;
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return $this->images[0];
     }
 }

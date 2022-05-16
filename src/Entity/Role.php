@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role
+class Role implements SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -115,5 +116,25 @@ class Role
     public function __toString():string
     {
         return $this->role;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'role';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->role;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return '';
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return false;
     }
 }

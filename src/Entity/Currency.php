@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\CurrencyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 #[UniqueEntity(fields: ['currency', 'currencyFullName'], message: 'Currency and Currency\'s Name Should be unique')]
-class Currency
+class Currency implements SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -109,5 +110,25 @@ class Currency
     public function __toString(): string
     {
         return $this->symbol . ' : ' . strtoupper($this->currency) . ' - ' . $this->currencyFullName;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'currency';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->currency;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return $this->currencyFullName;
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return null;
     }
 }

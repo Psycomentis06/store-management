@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+class Customer implements SearchableEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -132,5 +133,25 @@ class Customer
         }
 
         return $this;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'phoneNumber';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return "Email : $this->email, Phone Number: $this->phoneNumber";
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\_Interface\SearchableEntityInterface;
 use App\Repository\PermissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
-class Permission
+class Permission implements SearchableEntityInterface
 {
 
     #[ORM\Id]
@@ -95,5 +96,25 @@ class Permission
         $this->route = $route;
 
         return $this;
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'permission';
+    }
+
+    public function getSearchCardTitle(): string
+    {
+        return $this->permission;
+    }
+
+    public function getSearchCardBody(): string
+    {
+        return '';
+    }
+
+    public function getSearchCardImage(): ?string
+    {
+        return null;
     }
 }
