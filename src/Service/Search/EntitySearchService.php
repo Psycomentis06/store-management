@@ -2,6 +2,7 @@
 
 namespace App\Service\Search;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -11,10 +12,12 @@ class EntitySearchService
 {
     private const ENTITIES_DIR_NAME = "/src/Entity/";
     private KernelInterface $kernel;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(KernelInterface $kernel, Filesystem $filesystem)
+    public function __construct(KernelInterface $kernel, EntityManagerInterface $entityManager)
     {
         $this->kernel = $kernel;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -96,5 +99,29 @@ class EntitySearchService
             }
             return $res;
         }
+    }
+
+
+    public function findEntityByName(string $name): ?string
+    {
+        $res =$this->findEntitiesByName($name);
+
+        return match (count($res)) {
+            1 => $res[0],
+            default => null,
+        };
+    }
+
+    public function fieldExists(string $entity, string $name):?bool
+    {
+        $fields = $this->entityManager->getClassMetadata($entity)->getFieldNames();
+        return count(
+          array_filter(
+              $fields,
+              function ($f) use ($name) {
+                  return preg_match("/(?i)($name)/", $f);
+              }
+          )
+        ) === 1;
     }
 }
