@@ -2,11 +2,11 @@
 
 namespace App\Controller\Main;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\CustomAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IndexController extends AbstractController
+class IndexController extends CustomAbstractController
 {
     #[Route(
         '/',
@@ -27,7 +27,8 @@ class IndexController extends AbstractController
         options: ["system" => "true"],
         defaults: ["description" => "Redirect users to the real login page on url '/auth/login'"]
     )]
-    public function login(): Response {
+    public function login(): Response
+    {
         return $this->redirectToRoute('app_auth_login');
     }
 }

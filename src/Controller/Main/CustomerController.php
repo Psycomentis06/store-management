@@ -2,16 +2,16 @@
 
 namespace App\Controller\Main;
 
+use App\Controller\CustomAbstractController;
 use App\Entity\Customer;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/customer')]
-class CustomerController extends AbstractController
+class CustomerController extends CustomAbstractController
 {
     #[Route('/', name: 'app_customer_index', methods: ['GET'])]
     public function index(CustomerRepository $customerRepository): Response
@@ -67,7 +67,7 @@ class CustomerController extends AbstractController
     #[Route('/{id}', name: 'app_customer_delete', methods: ['POST'])]
     public function delete(Request $request, Customer $customer, CustomerRepository $customerRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$customer->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $customer->getId(), $request->request->get('_token'))) {
             $customerRepository->remove($customer);
         }
 

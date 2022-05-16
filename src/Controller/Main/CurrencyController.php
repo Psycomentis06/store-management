@@ -2,16 +2,16 @@
 
 namespace App\Controller\Main;
 
+use App\Controller\CustomAbstractController;
 use App\Entity\Currency;
 use App\Form\CurrencyType;
 use App\Repository\CurrencyRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/product/currency')]
-class CurrencyController extends AbstractController
+class CurrencyController extends CustomAbstractController
 {
     #[Route('/', name: 'app_currency_index', methods: ['GET'])]
     public function index(CurrencyRepository $currencyRepository): Response
@@ -67,7 +67,7 @@ class CurrencyController extends AbstractController
     #[Route('/{id}', name: 'app_currency_delete', methods: ['POST'])]
     public function delete(Request $request, Currency $currency, CurrencyRepository $currencyRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$currency->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $currency->getId(), $request->request->get('_token'))) {
             $currencyRepository->remove($currency);
         }
 

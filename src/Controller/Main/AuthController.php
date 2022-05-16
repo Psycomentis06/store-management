@@ -2,13 +2,13 @@
 
 namespace App\Controller\Main;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Controller\CustomAbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/auth/')]
-class AuthController extends AbstractController
+class AuthController extends CustomAbstractController
 {
 
     #[Route(
