@@ -26,7 +26,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Search</button>
+          <button type="button" class="btn btn-primary" @click="ajax('Hrllo')">Search</button>
         </div>
       </div>
     </div>
@@ -35,13 +35,23 @@
 </template>
 
 <script>
+import {defineComponent} from 'vue'
 import SearchTab from "./SearchTab.vue";
 import HelpTab from "./HelpTab.vue";
 
-export default {
+export default defineComponent({
   name: "SearchModal",
-  components: {HelpTab, SearchTab}
-}
+  components: {HelpTab, SearchTab},
+  methods: {
+    ajax: function(val) {
+      console.log(val)
+      fetch(`http://localhost:8000/api/v1/search/r?q=${val}`)
+      .then(res => {
+        console.log(res);
+      })
+    }
+  }
+})
 </script>
 
 <style scoped>
