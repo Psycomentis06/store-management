@@ -56,6 +56,6 @@ class SearchController extends AbstractController
         //return new Response(json_encode($this->routeSearchService->findAllByNameLike('curr')));
         $query = $request->get('q');
         $query = empty($query) ? '' : $query;
-        return new Response($this->parserService->parse($query));
+        return new Response(json_encode($this->parserService->parse($query)));
     }
 }

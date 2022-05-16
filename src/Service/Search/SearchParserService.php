@@ -6,6 +6,7 @@ use App\Utils\LikeQueryHelpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
 
 class SearchParserService
@@ -14,32 +15,32 @@ class SearchParserService
 
     private EntityManagerInterface $entityManager;
     private EntitySearchService $entitySearchService;
+    private RequestStack $requestStack;
 
-    public function __construct(EntityManagerInterface $entityManager, EntitySearchService $entitySearchService)
+    public function __construct(EntityManagerInterface $entityManager, EntitySearchService $entitySearchService, RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
         $this->entitySearchService = $entitySearchService;
-    }
-
-    /**
-     * @throws EntityNotFoundException
-     */
-    public function parse(string $query)
-    {
-        switch ($query) {
-            case str_starts_with($query, '/e '):
-                $this->parseEntity($query);
-                break;
-            default:
-                throw new \InvalidArgumentException("Invalid scope for '$query'");
-        }
+        $this->requestStack = $requestStack;
     }
 
     /**
      * @throws EntityNotFoundException
      * @throws \ReflectionException
      */
-    public function parseEntity(string $query)
+    public function parse(string $query): array
+    {
+        return match ($query) {
+            str_starts_with($query, '/e ') => $this->parseEntity($query),
+            default => $this->createEntityQueryBuilderByGuess($query),
+        };
+    }
+
+    /**
+     * @throws EntityNotFoundException
+     * @throws \ReflectionException
+     */
+    public function parseEntity(string $query): array
     {
         // String format should be : /e entityName:field value
         $query = trim($query, ' ');
@@ -76,7 +77,7 @@ class SearchParserService
             if (isset($options['entity']['field']))
                 $field = $options['entity']['field'];
             $a = $this->createEntityQueryBuilder($entity, $field, $options['value']);
-            dd($a->getQuery()->getResult());
+            //dd($a->getQuery()->getResult());
         } else {
             throw new EntityNotFoundException("Entity Not Found");
         }
@@ -164,7 +165,16 @@ class SearchParserService
         return $queryBuilder;
     }
 
-    public function createEntityQueryBuilderByGuess(string $query)
+    /**
+     * Search based on user's current active route using default search field
+     * @param string $query
+     * @return array
+     */
+    public function createEntityQueryBuilderByGuess(string $query): array
     {
+        $r = $this->requestStack->getSession();
+        // Set by CustomAbstractController
+        $lastRoute = $r->get('_route');
+        return ['url' => $lastRoute];
     }
 }
