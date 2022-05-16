@@ -5,7 +5,6 @@
     </div>
     <input v-model="searchValue" @keyup="searchInputHandler" type="text" class="form-control"
            placeholder="Search for any thing" aria-label="search" aria-describedby="basic-addon1">
-    <span class="search-autocomplete">{{ getHint('Hello') }}</span>
   </div>
 </template>
 
@@ -24,27 +23,10 @@ export default defineComponent({
       console.log(this.searchValue)
       const target = event.target as HTMLInputElement
     },
-    getHint: function (phrase: string) {
-      const hintLength = this.searchValue.length
-      let spaces = ""
-      for (let i = 0; i < hintLength; i++) {
-        spaces += " ";
-      }
-      return phrase.replace(this.searchValue, spaces);
-    }
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.search-autocomplete {
-  color: var(--light);
-  top: 11px;
-  left: 48px;
-  font-size: 14px;
-  font-stretch: 100%;
-  position: absolute;
-  z-index: 50;
-}
 
 </style>
