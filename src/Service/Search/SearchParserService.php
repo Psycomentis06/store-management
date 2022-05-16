@@ -2,12 +2,16 @@
 
 namespace App\Service\Search;
 
+use App\Utils\LikeQueryHelpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Serializer\Exception\UnsupportedException;
 
 class SearchParserService
 {
+    use LikeQueryHelpers;
+
     private EntityManagerInterface $entityManager;
     private EntitySearchService $entitySearchService;
 
@@ -17,6 +21,9 @@ class SearchParserService
         $this->entitySearchService = $entitySearchService;
     }
 
+    /**
+     * @throws EntityNotFoundException
+     */
     public function parse(string $query)
     {
         switch ($query) {
@@ -30,6 +37,7 @@ class SearchParserService
 
     /**
      * @throws EntityNotFoundException
+     * @throws \ReflectionException
      */
     public function parseEntity(string $query)
     {
@@ -39,7 +47,7 @@ class SearchParserService
         $options = [
             'scope' => $query[0],
             'entity' => $query[1],
-            'value' => $query[2]
+            'value' => join(' ', array_slice($query, 2, count($query) - 1))
         ];
 
         if (!str_starts_with($options['scope'], '/e')) {
@@ -57,9 +65,9 @@ class SearchParserService
 
         $entity = [];
         if (isset($options['entity']['name'])) {
-            $entity = $this->entitySearchService->findEntityByName($options['entity']['name']);
+            $entity = $this->entitySearchService->findSearchableEntityByName($options['entity']['name']);
         } else {
-            $entity = $this->entitySearchService->findEntityByName($options['entity']);
+            $entity = $this->entitySearchService->findSearchableEntityByName($options['entity']);
         }
 
         if (!empty($entity)) {
@@ -67,25 +75,93 @@ class SearchParserService
             $field = null;
             if (isset($options['entity']['field']))
                 $field = $options['entity']['field'];
-            $this->createEntityQueryBuilder($entity, $field, $options['value']);
-
+            $a = $this->createEntityQueryBuilder($entity, $field, $options['value']);
+            dd($a->getQuery()->getResult());
         } else {
             throw new EntityNotFoundException("Entity Not Found");
         }
 
     }
 
-    public function createEntityQueryBuilder(string $entityName, ?string $field, string $query): ?QueryBuilder
+    public function createEntityQueryBuilder(string $entityName, ?string $field, string $query): QueryBuilder
     {
         $entityMeta = $this->entityManager->getClassMetadata($entityName);
         $repo = $this->entityManager->getRepository($entityName);
-
-        $queryBuilder = $repo->createQueryBuilder($entityMeta->getTableName()[0]);
+        $queryAlias = $entityMeta->getTableName()[0];
+        $queryBuilder = $repo->createQueryBuilder($queryAlias);
+        $queryParams = [];
         if (!empty($field)) {
             $fieldExists = $this->entitySearchService->fieldExists($entityName, $field);
-            dd($fieldExists);
+            $queryParams = [
+                'alias' => $queryAlias,
+                'query' => $query
+            ];
+            if ($fieldExists) {
+                $queryParams['field'] = $field;
+            } else {
+                $queryParams['field'] = $entityName::getDefaultSearchFieldName();
+            }
+        } else {
+            // Method getDefaultSearchFieldName() came from SearchableEntityInterface
+            $defaultField = $entityName::getDefaultSearchFieldName();
+            $queryParams = [
+                'alias' => $queryAlias,
+                'field' => $defaultField,
+                'query' => $query
+            ];
         }
-        return null;
+
+        // Build Where condition based on value type
+        //dd($this->entitySearchService->getFieldType($entityName, $queryParams['field']));
+        $fieldType = $this->entitySearchService->getFieldType($entityName, $queryParams['field']);
+        switch ($fieldType) {
+            case 'string':
+                $queryBuilder
+                    ->where($queryParams['alias'] . '.' . $queryParams['field'] . ' like :' . $queryParams['field'])
+                    ->setParameter($queryParams['field'], $this->makeLikeParam($queryParams['query']));
+                break;
+            case 'integer':
+                $queryBuilder
+                    ->where($queryParams['alias'] . '.' . $queryParams['field'] . ' = :' . $queryParams['field'])
+                    ->setParameter($queryParams['field'], $queryParams['query']);
+                break;
+            case 'date':
+                $queryDateValues = explode(' ', trim($queryParams['query']));
+                if (empty($queryDateValues) || (count($queryDateValues) === 1 && empty($queryDateValues[0])))
+                    $queryDateValues = array();
+
+                //dd($queryDateValuesCount);
+                switch (count($queryDateValues)) {
+                    case 0:
+                        $queryBuilder
+                            ->where(
+                                $queryParams['alias'] . '.' . $queryParams['field'] . ' = :' . $queryParams['field']
+                            )
+                            ->setParameter($queryParams['field'], 'now');
+                        break;
+                    case 1:
+                        $queryBuilder
+                            ->where(
+                                $queryParams['alias'] . '.' . $queryParams['field'] . ' between :' . $queryParams['field'] . '_1 and :' . $queryParams['field'] . '_2'
+                            )
+                            ->setParameter($queryParams['field'] . '_1', $queryDateValues[0])
+                            ->setParameter($queryParams['field'] . '_2', 'now()');
+                        break;
+                    default:
+                        $queryBuilder
+                            ->where(
+                                $queryParams['alias'] . '.' . $queryParams['field'] . ' between :' . $queryParams['field'] . '_1 and :' . $queryParams['field'] . '_2'
+                            )
+                            ->setParameter($queryParams['field'] . '_1', $queryDateValues[0])
+                            ->setParameter($queryParams['field'] . '_2', $queryDateValues[1]);
+                        break;
+                }
+                break;
+            default:
+                throw new UnsupportedException('\'' . $fieldType . ' \' Unsupported Field Type');
+        }
+
+        return $queryBuilder;
     }
 
     public function createEntityQueryBuilderByGuess(string $query)

@@ -52,7 +52,7 @@ class EntitySearchService
      */
     public function isSearchable(string $name = null, \ReflectionClass $class = null): bool
     {
-        $interface = 'EntitySearchable';
+        $interface = 'App\_Interface\SearchableEntityInterface';
         if ($name !== null) {
             $erc = $this->getEntityReflectionClass($name)->getInterfaces();
             return !empty($erc[$interface]);
@@ -105,11 +105,36 @@ class EntitySearchService
     public function findEntityByName(string $name): ?string
     {
         $res =$this->findEntitiesByName($name);
-
         return match (count($res)) {
             1 => $res[0],
             default => null,
         };
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function findSearchableEntityByName(string $name): ?string
+    {
+        $res =$this->filterSearchable($this->findEntitiesByName($name));
+        return match (count($res)) {
+            1 => $res[0],
+            default => null,
+        };
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function filterSearchable(array $entities): array
+    {
+        $res = [];
+        foreach ($entities as $entity) {
+            if ($this->isSearchable($entity)) {
+                $res[] = $entity;
+            }
+        }
+        return $res;
     }
 
     public function fieldExists(string $entity, string $name):?bool
@@ -123,5 +148,11 @@ class EntitySearchService
               }
           )
         ) === 1;
+    }
+
+    public function getFieldType(string $entity, string $name): string
+    {
+        $fields = $this->entityManager->getClassMetadata($entity);
+        return $fields->getTypeOfField($name);
     }
 }
