@@ -2,6 +2,7 @@
 
 namespace App\Service\Search;
 
+use App\Utils\Str;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -154,5 +155,17 @@ class EntitySearchService
     {
         $fields = $this->entityManager->getClassMetadata($entity);
         return $fields->getTypeOfField($name);
+    }
+
+    public function getEntityNameFromRouteName(string $routeName): string
+    {
+        $routeName = ucfirst(strtr($routeName, [
+            'app_' => '',
+            '_index' => '',
+            '_delete' => '',
+            '_edit' => '',
+            '_new' => ''
+        ]));
+        return Str::underscoresToCapital($routeName);
     }
 }
