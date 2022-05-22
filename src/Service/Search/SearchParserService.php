@@ -81,7 +81,7 @@ class SearchParserService
         } else {
             throw new EntityNotFoundException("Entity Not Found");
         }
-
+        return [];
     }
 
     public function createEntityQueryBuilder(string $entityName, ?string $field, string $query): QueryBuilder
@@ -162,19 +162,34 @@ class SearchParserService
                 throw new UnsupportedException('\'' . $fieldType . ' \' Unsupported Field Type');
         }
 
-        return $queryBuilder;
+        return $queryBuilder
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getArrayResult();
     }
 
     /**
      * Search based on user's current active route using default search field
      * @param string $query
      * @return array
+     * @throws \ReflectionException
      */
     public function createEntityQueryBuilderByGuess(string $query): array
     {
         $r = $this->requestStack->getSession();
         // Set by CustomAbstractController
         $lastRoute = $r->get('_route');
-        return ['url' => $lastRoute];
+        $entityName = $this->entitySearchService->getEntityNameFromRouteName($lastRoute);
+        if (!$this->entitySearchService->isSearchable($entityName)) return [];
+        $entityName = $this->entitySearchService->getEntityClassNamespace($entityName);
+        $defaultFieldName = $entityName::getDefaultSearchFieldName();
+        $repo = $this->entityManager->getRepository($entityName);
+
+        return $repo->createQueryBuilder($entityName[0])
+            ->where($entityName[0] . '.' . $defaultFieldName . ' like :' . $defaultFieldName)
+            ->setParameter($defaultFieldName, $this->makeLikeParam($query))
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
