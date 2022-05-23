@@ -29,7 +29,7 @@
                 <td>{{ product.description }}</td>
                 <td>{{ product.sku }}</td>
                 <td>{{ product.discount }}</td>
-                <td>{{ product.guarantee ? product.guarantee|date('Y-m-d') : '' }}</td>
+                <td>{{ product.guarantee ? product.guarantee : '' }}</td>
                 <td>{{ product.properties ? product.properties|json_encode : '' }}</td>
                 <td>{{ product.digital ? 'Yes' : 'No' }}</td>
                 <td>
