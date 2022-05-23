@@ -17,6 +17,8 @@
           <div class="tab-content" id="globalSearchTabContent">
             <div class="tab-pane fade show active" id="search-tab-content" role="tabpanel" aria-labelledby="search-tab">
               <SearchTab/>
+              <hr>
+              <SearchResultContainer />
             </div>
             <div class="tab-pane fade" id="global-search-help-tab-content" role="tabpanel"
                  aria-labelledby="global-search-help-tab">
@@ -26,7 +28,10 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" @click="ajax('Hrllo')">Search</button>
+          <button type="button" class="btn btn-primary">
+            Full Search
+            <i class="la la-external-link"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -38,18 +43,13 @@
 import {defineComponent} from 'vue'
 import SearchTab from "./SearchTab.vue";
 import HelpTab from "./HelpTab.vue";
+import SearchResultContainer from "./SearchResultContainer";
 
 export default defineComponent({
   name: "SearchModal",
-  components: {HelpTab, SearchTab},
+  components: {SearchResultContainer, HelpTab, SearchTab},
   methods: {
-    ajax: function(val) {
-      console.log(val)
-      fetch(`http://localhost:8000/api/v1/search/r?q=${val}`)
-      .then(res => {
-        console.log(res);
-      })
-    }
+
   }
 })
 </script>
