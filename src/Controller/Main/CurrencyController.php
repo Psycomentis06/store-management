@@ -30,6 +30,7 @@ class CurrencyController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $currencyRepository->add($currency);
+            $this->addFlash('success', 'Currency created');
             return $this->redirectToRoute('app_currency_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -55,6 +56,7 @@ class CurrencyController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $currencyRepository->add($currency);
+            $this->addFlash('success', 'Currency edited');
             return $this->redirectToRoute('app_currency_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -69,6 +71,7 @@ class CurrencyController extends CustomAbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $currency->getId(), $request->request->get('_token'))) {
             $currencyRepository->remove($currency);
+            $this->addFlash('success', 'Currency removed');
         }
 
         return $this->redirectToRoute('app_currency_index', [], Response::HTTP_SEE_OTHER);

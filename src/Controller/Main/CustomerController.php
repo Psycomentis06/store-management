@@ -30,6 +30,7 @@ class CustomerController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $customerRepository->add($customer);
+            $this->addFlash('success', 'Customer added successfully');
             return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -55,6 +56,7 @@ class CustomerController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $customerRepository->add($customer);
+            $this->addFlash('success', 'Customer edited successfully');
             return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -69,6 +71,7 @@ class CustomerController extends CustomAbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $customer->getId(), $request->request->get('_token'))) {
             $customerRepository->remove($customer);
+            $this->addFlash('success', 'Customer removed');
         }
 
         return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);

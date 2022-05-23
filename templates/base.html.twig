@@ -732,6 +732,17 @@
     <div class="content-page">
         <div class="container-fluid">
             <div id="global-search-vue"></div>
+            {# Flashes #}
+            {% for msg in app.flashes('success') %}
+                <div class="alert alert-success" role="alert">
+                    <div class="iq-alert-icon">
+                        <i class="ri-alert-line"></i>
+                    </div>
+                    <div class="iq-alert-text">
+                        {{ msg }}
+                    </div>
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
         </div>
     </div>

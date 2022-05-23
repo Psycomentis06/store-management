@@ -36,6 +36,7 @@ class ProductController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $productRepository->add($product);
+            $this->addFlash('success', 'Product added successfully');
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -61,6 +62,7 @@ class ProductController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $productRepository->add($product);
+            $this->addFlash('success', 'Product edited successfully');
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -75,6 +77,7 @@ class ProductController extends CustomAbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->request->get('_token'))) {
             $productRepository->remove($product);
+            $this->addFlash('success', 'Product removed successfully');
         }
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
