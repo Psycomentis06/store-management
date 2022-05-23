@@ -3,6 +3,7 @@
 namespace App\Service\Search;
 
 use App\Utils\LikeQueryHelpers;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
@@ -16,12 +17,14 @@ class SearchParserService
     private EntityManagerInterface $entityManager;
     private EntitySearchService $entitySearchService;
     private RequestStack $requestStack;
+    private RouteSearchService $routeSearchService;
 
-    public function __construct(EntityManagerInterface $entityManager, EntitySearchService $entitySearchService, RequestStack $requestStack)
+    public function __construct(EntityManagerInterface $entityManager, EntitySearchService $entitySearchService, RequestStack $requestStack, RouteSearchService $routeSearchService)
     {
         $this->entityManager = $entityManager;
         $this->entitySearchService = $entitySearchService;
         $this->requestStack = $requestStack;
+        $this->routeSearchService = $routeSearchService;
     }
 
     /**
@@ -30,10 +33,35 @@ class SearchParserService
      */
     public function parse(string $query): array
     {
-        return match ($query) {
-            str_starts_with($query, '/e ') => $this->parseEntity($query),
-            default => $this->createEntityQueryBuilderByGuess($query),
-        };
+        if (str_starts_with($query, '/e ')) {
+            return $this->entityResultToApiResponse($this->parseEntity($query));
+        } else if (str_starts_with($query, '/r')) {
+            return $this->parseRoute($query);
+        } else {
+            return $this->entityResultToApiResponse($this->createEntityQueryBuilderByGuess($query));
+        }
+    }
+
+    public function entityResultToApiResponse(array $data)
+    {
+        $res = [
+            'content' => []
+        ];
+        $content = array();
+        if (!empty($data['res'])) {
+            foreach ($data['res'] as $entity) {
+                $content[] = [
+                    "title" => $entity->getSearchCardTitle(),
+                    "body" => $entity->getSearchCardBody(),
+                    "image" => $entity->getSearchCardImage()
+                ];
+            }
+            $res['content'] = $content;
+        }
+        if (!empty($data['redirectUrl'])) {
+            $res['redirectUrl'] = $data['redirectUrl'];
+        }
+        return $res;
     }
 
     /**
@@ -72,16 +100,22 @@ class SearchParserService
         }
 
         if (!empty($entity)) {
+            $entitySimpleName = $entity;
             $entity = $this->entitySearchService->getEntityClassNamespace($entity);
             $field = null;
             if (isset($options['entity']['field']))
                 $field = $options['entity']['field'];
-            $a = $this->createEntityQueryBuilder($entity, $field, $options['value']);
-            //dd($a->getQuery()->getResult());
+
+            $maxResult = $this->requestStack->getCurrentRequest()->get('max');
+            if (empty($maxResult)) $maxResult = 10;
+            $res = $this->createEntityQueryBuilder($entity, $field, $options['value']);
+            $res->setMaxResults($maxResult)
+                ->getQuery()
+                ->getResult(AbstractQuery::HYDRATE_OBJECT);
+            return ["res" => $res, "redirectUrl" => $this->routeSearchService->getEntityIndexRoutePath($entitySimpleName)];
         } else {
             throw new EntityNotFoundException("Entity Not Found");
         }
-        return [];
     }
 
     public function createEntityQueryBuilder(string $entityName, ?string $field, string $query): QueryBuilder
@@ -162,10 +196,13 @@ class SearchParserService
                 throw new UnsupportedException('\'' . $fieldType . ' \' Unsupported Field Type');
         }
 
-        return $queryBuilder
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getArrayResult();
+        return $queryBuilder;
+    }
+
+    public function parseRoute(string $query): array
+    {
+        $routeName = substr($query, 3);
+        return $this->routeSearchService->findAllByNameLike($routeName);
     }
 
     /**
@@ -181,15 +218,19 @@ class SearchParserService
         $lastRoute = $r->get('_route');
         $entityName = $this->entitySearchService->getEntityNameFromRouteName($lastRoute);
         if (!$this->entitySearchService->isSearchable($entityName)) return [];
+        $entitySimpleName = $entityName;
         $entityName = $this->entitySearchService->getEntityClassNamespace($entityName);
         $defaultFieldName = $entityName::getDefaultSearchFieldName();
         $repo = $this->entityManager->getRepository($entityName);
-
-        return $repo->createQueryBuilder($entityName[0])
+        $maxResult = $this->requestStack->getCurrentRequest()->get('max');
+        if (empty($maxResult)) $maxResult = 10;
+        $res = $repo->createQueryBuilder($entityName[0])
             ->where($entityName[0] . '.' . $defaultFieldName . ' like :' . $defaultFieldName)
             ->setParameter($defaultFieldName, $this->makeLikeParam($query))
-            ->setMaxResults(10)
+            ->setMaxResults($maxResult)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+        return ["res" => $res, "redirectUrl" => $this->routeSearchService->getEntityIndexRoutePath($entitySimpleName)];
     }
+
 }

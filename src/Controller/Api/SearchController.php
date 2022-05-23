@@ -8,6 +8,8 @@ use App\Service\Search\SearchParserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Header\HeaderInterface;
+use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/v1/search')]
@@ -56,6 +58,8 @@ class SearchController extends AbstractController
         //return new Response(json_encode($this->routeSearchService->findAllByNameLike('curr')));
         $query = $request->get('q');
         $query = empty($query) ? '' : $query;
-        return new Response(json_encode($this->parserService->parse($query)));
+        $r = new Response(json_encode($this->parserService->parse($query)), headers: []);
+        $r->headers->set('Content-Type', 'text/json');
+        return $r;
     }
 }
