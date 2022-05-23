@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@types/bootstrap": "^4.5.0",
+        "axios": "^0.27.2",
         "loader": "^2.1.1",
         "pinia": "^2.0.14",
         "sass": "^1.49.11",
