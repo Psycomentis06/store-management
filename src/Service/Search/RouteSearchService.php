@@ -26,7 +26,7 @@ class RouteSearchService
                         "path" => $route->getPath(),
                         "description" => $route->getDefault('description')
                     ];
-                    else if (preg_match("/\b($name)\b/i", $routeName))
+                    else if (preg_match("/($name)/i", $routeName))
                         $res[] = [
                             "path" => $route->getPath(),
                             "description" => $route->getDefault('description')
