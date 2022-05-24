@@ -15,7 +15,10 @@ export const useSearchStore = defineStore('searchStore', {
     },
     actions: {
         search(query: string) {
-            axios.get(`/api/v1/search/r?q=${query}`).then(r => this.result = r.data)
+            if (query.length > 0) axios.get(`/api/v1/search/r?q=${query}`).then(r => {
+                this.result = r.data
+                console.log(r.data)
+            })
         },
         toggleSearchMode: function () {
             if (this.searchMode === 'SIMPLE') this.searchMode = 'ADVANCED'

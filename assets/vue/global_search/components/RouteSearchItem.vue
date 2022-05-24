@@ -2,10 +2,17 @@
 
 </template>
 
-<script>
-export default {
-  name: "RouteSearchItem"
-}
+<script lang="ts">
+import {defineComponent} from 'vue'
+
+export default defineComponent({
+  name: "RouteSearchItem",
+  props: {
+    data: {
+      required: true
+    }
+  }
+})
 </script>
 
 <style scoped>

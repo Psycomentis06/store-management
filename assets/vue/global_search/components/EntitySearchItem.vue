@@ -1,22 +1,36 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">Special title treatment</h4>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary btn-block">Go somewhere</a>
+      <h4 class="card-title">{{ data.title }}</h4>
+      <p class="card-text">{{ data.description }}.</p>
+      <a :href="createEntityLink()" class="btn btn-primary btn-block">More Details</a>
     </div>
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from 'vue'
+import {IEntitySearchResponse} from "@/assets/vue/global_search/interfaces/IEntitySearchResponse";
+
+export default defineComponent({
   name: "EntitySearchItem",
   props: {
     data: {
+      required: true,
+    },
+    redirectUrl: {
+      type: String,
       required: true
     }
+  },
+  methods: {
+    createEntityLink(): string {
+      console.log(this.redirectUrl)
+      const d = this.data as IEntitySearchResponse;
+      return this.redirectUrl + d.id;
+    }
   }
-}
+})
 </script>
 
 <style scoped>
