@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use App\_Interface\SearchableEntityInterface;
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product implements SearchableEntityInterface
@@ -43,6 +46,14 @@ class Product implements SearchableEntityInterface
 
     #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'products')]
     private Currency $currency;
+
+    #[ORM\ManyToMany(targetEntity: InventoryItem::class, mappedBy: 'product')]
+    private Collection $inventoryItems;
+
+    #[Pure] public function __construct()
+    {
+        $this->inventoryItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -187,5 +198,32 @@ class Product implements SearchableEntityInterface
     public function getSearchCardImage(): ?string
     {
         return $this->images[0];
+    }
+
+    /**
+     * @return Collection<int, InventoryItem>
+     */
+    public function getInventoryItems(): Collection
+    {
+        return $this->inventoryItems;
+    }
+
+    public function addInventoryItem(InventoryItem $inventoryItem): self
+    {
+        if (!$this->inventoryItems->contains($inventoryItem)) {
+            $this->inventoryItems[] = $inventoryItem;
+            $inventoryItem->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventoryItem(InventoryItem $inventoryItem): self
+    {
+        if ($this->inventoryItems->removeElement($inventoryItem)) {
+            $inventoryItem->removeProduct($this);
+        }
+
+        return $this;
     }
 }
