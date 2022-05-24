@@ -37,15 +37,23 @@ class SearchParserService
         if (str_starts_with($query, '/e ')) {
             return $this->entityResultToApiResponse($this->parseEntity($query));
         } else if (str_starts_with($query, '/r')) {
-            return $this->parseRoute($query);
+            return $this->routeResultToApiResponse($this->parseRoute($query));
         } else {
             return $this->entityResultToApiResponse($this->createEntityQueryBuilderByGuess($query));
         }
     }
 
-    #[ArrayShape(['content' => "array", 'redirectUrl' => "mixed"])]
-    public function entityResultToApiResponse(array $data)
+    #[ArrayShape(['content' => "array"])]
+    public function routeResultToApiResponse(array $data)
     {
+        return [
+            'content' => $data
+        ];
+    }
+
+    #[ArrayShape(['content' => "array", 'redirectUrl' => "mixed"])]
+    public function entityResultToApiResponse(array $data): array
+{
         $res = [
             'content' => []
         ];
