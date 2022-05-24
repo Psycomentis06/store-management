@@ -25,7 +25,6 @@ export default defineComponent({
   },
   setup() {
     return {
-      highlightText,
       searchStore: useSearchStore
     }
   }
