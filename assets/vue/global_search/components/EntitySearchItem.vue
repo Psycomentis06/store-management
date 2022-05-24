@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-body">
       <h4 class="card-title">{{ data.title }}</h4>
-      <p class="card-text">{{ data.description }}.</p>
+      <p class="card-text">{{ data.body }}.</p>
       <a :href="createEntityLink()" class="btn btn-primary btn-block">More Details</a>
     </div>
   </div>
@@ -25,7 +25,6 @@ export default defineComponent({
   },
   methods: {
     createEntityLink(): string {
-      console.log(this.redirectUrl)
       const d = this.data as IEntitySearchResponse;
       return this.redirectUrl + d.id;
     }

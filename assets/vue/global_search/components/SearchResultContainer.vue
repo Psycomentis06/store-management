@@ -2,6 +2,7 @@
   <div>
     <div v-if="isEntityResponse(searchStore.result) && searchStore.searchQuery.length > 0">
       <h4> Entity </h4>
+      <hr>
       <ul class="list-unstyled">
         <li v-for="d in searchStore.result.content">
           <EntitySearchItem :data="d" :redirect-url="searchStore.result.redirectUrl || '' " />
@@ -10,8 +11,9 @@
     </div>
     <div v-else-if="isRouteResponse(searchStore.result) && searchStore.searchQuery.length > 0">
       <h4> Links </h4>
+      <hr>
       <ul class="list-unstyled">
-        <li v-for="d in searchStore.result">
+        <li v-for="d in searchStore.result.content">
           <RouteSearchItem :data="d" />
         </li>
       </ul>
@@ -47,7 +49,7 @@ export default defineComponent({
       return (obj?.content?.length > 0 && obj.content[0].hasOwnProperty('title'))
     },
     isRouteResponse(obj: ISearchResponse): boolean {
-      return (obj?.content?.length > 0 && obj.content[0].hasOwnProperty('path'))
+      return (obj?.content?.length > 0 && obj?.content[0].hasOwnProperty('path'))
     }
   }
 })
