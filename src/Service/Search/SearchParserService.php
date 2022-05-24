@@ -7,6 +7,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\UnsupportedException;
 
@@ -42,6 +43,7 @@ class SearchParserService
         }
     }
 
+    #[ArrayShape(['content' => "array", 'redirectUrl' => "mixed"])]
     public function entityResultToApiResponse(array $data)
     {
         $res = [
@@ -51,6 +53,7 @@ class SearchParserService
         if (!empty($data['res'])) {
             foreach ($data['res'] as $entity) {
                 $content[] = [
+                    "id" => $entity->getId(),
                     "title" => $entity->getSearchCardTitle(),
                     "body" => $entity->getSearchCardBody(),
                     "image" => $entity->getSearchCardImage()
