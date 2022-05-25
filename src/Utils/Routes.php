@@ -12,8 +12,11 @@ class Routes
      * @param $routeObj Route
      * @return string permission's name in lower case
      */
-    public static function getPermissionName(Route $routeObj): string {
-        $permissionName = explode('\\', $routeObj->getDefault('_controller'));
+    public static function getPermissionName(Route | string $routeObj): string {
+        if (gettype($routeObj) === 'object' && $routeObj instanceof Route) {
+            $routeObj = $routeObj->getDefault('_controller');
+        }
+        $permissionName = explode('\\', $routeObj);
         $permissionName = end($permissionName);
         $permissionName = str_replace("Controller", "", $permissionName);
         $permissionName = str_replace("::", ":", $permissionName);
