@@ -7,21 +7,25 @@ use App\Utils\Routes;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 class PermissionService
 {
     private Security $security;
+    private RouterInterface $router;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, RouterInterface $router)
     {
         $this->security = $security;
+        $this->router = $router;
     }
 
-    public function checkPermission(Request $request, bool $throwable = false, string $routeName = null): bool
+    public function checkPermission(Request $request, bool $throwable = false): bool
     {
         $currentUser = $this->security->getUser();
         $routeRole = $request->get('role');
+
         if (!empty($routeRole)) {
             if (!$this->security->isGranted('IS_AUTHENTICATED_FULLY')) {
                 if ($throwable)
@@ -30,11 +34,7 @@ class PermissionService
                     return false;
             } else {
                 if ($currentUser instanceof User) {
-                    $currentRoutePermission = "";
-                    if (empty($routeName))
-                        $currentRoutePermission = Routes::getPermissionName($request->get('_controller'));
-                    else
-                        $currentRoutePermission = $routeName;
+                    $currentRoutePermission = Routes::getPermissionName($request->get('_controller'));
                     /*
                      * Version N°1
                      * try {
@@ -47,7 +47,9 @@ class PermissionService
                     /**
                      * Ver 2
                      */
-                    if (!in_array($currentRoutePermission, $currentUser->getPermissions())) {
+                    if (in_array($currentRoutePermission, $currentUser->getPermissions())) {
+                        return true;
+                    } else {
                         if ($throwable)
                             throw new AccessDeniedHttpException("No permission to access this page");
                         else
@@ -56,6 +58,28 @@ class PermissionService
                 }
             }
         }
-        return true;
+        return false;
+    }
+
+    public function checkPermissionByRouteName(string $routeName): bool
+    {
+        $route = $this->router->getRouteCollection()->get($routeName);
+        if (empty($route))
+            return false;
+        $routeRole = $route->getDefault('role');
+        if (empty($routeRole) || strlen($routeRole) === 0)
+            return true; // Empty role means route doesn't require permissions
+
+        if (!$this->security->isGranted('IS_AUTHENTICATED_FULLY'))
+            return false; // Route require permission && login as well
+
+        $currentUser = $this->security->getUser();
+        if ($currentUser instanceof User) {
+            $permissions = $currentUser->getPermissions();
+            $routePermission = Routes::getPermissionName($route);
+            return in_array($routePermission, $permissions);
+        }
+
+        return false;
     }
 }

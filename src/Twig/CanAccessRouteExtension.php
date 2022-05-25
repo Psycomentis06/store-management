@@ -27,6 +27,6 @@ class CanAccessRouteExtension extends AbstractExtension
 
     public function canAccessRoute($routeName): bool
     {
-        return $this->permissionService->checkPermission($this->requestStack->getMainRequest(), routeName: $routeName);
+        return $this->permissionService->checkPermissionByRouteName($routeName);
     }
 }
