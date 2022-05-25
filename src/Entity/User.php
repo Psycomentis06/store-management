@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\_Interface\SearchableEntityInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -25,7 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     private string $username;
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
-    private Collection $roles;
+    private $roles;
 
     #[ORM\Column(type: 'string')]
     private string $password;
@@ -47,6 +46,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         $this->roles = new ArrayCollection();
     }
 
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'username';
+    }
 
     public function getId(): ?int
     {
@@ -89,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         return array_unique($res);
     }
 
-    public function getRolesObj(): ArrayCollection
+    public function getRolesObj()
     {
         return $this->roles;
     }
@@ -183,11 +186,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         $this->digitalPurchase = $digitalPurchase;
 
         return $this;
-    }
-
-    public static function getDefaultSearchFieldName(): string
-    {
-        return 'username';
     }
 
     public function getSearchCardTitle(): string
