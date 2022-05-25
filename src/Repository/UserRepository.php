@@ -77,7 +77,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('val', $val)
             ->setMaxResults(1)
             ->getQuery()
-            ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
     }
 
@@ -109,4 +108,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByPermissionName($userId, $permission): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u')
+            ->join('u.roles', 'r')
+            ->join('r.permissions', 'p', 'WITH', 'p.permission = :val')
+            ->setParameter('val', $permission)
+            ->where('u.id = :id')
+            ->setParameter('id', $userId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_OBJECT);
+    }
 }
