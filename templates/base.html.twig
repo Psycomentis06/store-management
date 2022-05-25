@@ -42,15 +42,17 @@
                 <div class="data-scrollbar" data-scroll="1">
                     <nav class="iq-sidebar-menu">
                         <ul id="iq-sidebar-toggle" class="iq-menu">
-                            <li class="{{ is_route_active('app_index') }}">
-                                <a href="{{ path('app_index') }}" class="svg-icon">
-                                    <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                                    </svg>
-                                    <span class="ml-4">Dashboards</span>
-                                </a>
-                            </li>
+                            {% if can_access_route('app_index') %}
+                                <li class="{{ is_route_active('app_index') }}">
+                                    <a href="{{ path('app_index') }}" class="svg-icon">
+                                        <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                        </svg>
+                                        <span class="ml-4">Dashboards</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li class=" ">
                                 <a href="#stores" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
                                     <i class="las la-store-alt" style="font-size: x-large"></i>
@@ -59,24 +61,30 @@
                                     <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                                 </a>
                                 <ul id="stores" class="iq-submenu collapse">
-                                    <li class="{{ is_route_active('app_store_show_active') }}">
-                                        <a href={{ path('app_store_index') }}>
-                                            <i class="las la-store-alt" style="font-size: x-large"></i>
-                                            <span>My Store</span>
-                                        </a>
-                                    </li>
+                                    {% if can_access_route('app_store_show_active') %}
+                                        <li class="{{ is_route_active('app_store_show_active') }}">
+                                            <a href={{ path('app_store_index') }}>
+                                                <i class="las la-store-alt" style="font-size: x-large"></i>
+                                                <span>My Store</span>
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {% if can_access_route('app_store_index') %}
                                     <li class="{{ is_route_active('app_store_index') }}">
                                         <a href={{ path('app_store_index') }}>
                                             <i class="las la-store" style="font-size: x-large"></i>
                                             <span>All Stores</span>
                                         </a>
                                     </li>
+                                    {% endif %}
+                                    {% if can_access_route('app_inventory_index') %}
                                     <li class="{{ is_route_active('app_inventory_index') }}">
                                         <a href="{{ path('app_inventory_index') }}">
                                             <i class="las la-shopping-bag" style="font-size: x-large"></i>
                                             <span>Inventories</span>
                                         </a>
                                     </li>
+                                    {% endif %}
                                 </ul>
                             </li>
                             <li class=" ">
@@ -87,26 +95,32 @@
                                     <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                                 </a>
                                 <ul id="products" class="iq-submenu collapse">
+                                    {% if can_access_route('app_product_index') %}
                                     <li class="{{ is_route_active('app_product_index') }}">
                                         <a href={{ path('app_product_index') }}>
                                             <i class="ri-product-hunt-line" style="font-size: x-large"></i>
                                             <span>Products</span>
                                         </a>
                                     </li>
+                                    {% endif %}
+                                    {% if can_access_route('app_currency_index') %}
                                     <li class="{{ is_route_active('app_currency_index') }}">
                                         <a href="{{ path('app_currency_index') }}">
                                             <i class="las la-yen-sign" style="font-size: x-large"></i>
                                             <span>Currency</span>
                                         </a>
                                     </li>
+                                    {% endif %}
                                 </ul>
                             </li>
+                            {% if can_access_route('app_customer_index') %}
                             <li class="{{ is_route_active('app_customer_index') }}">
                                 <a href="{{ path('app_customer_index') }}">
                                     <i class="ri-customer-service-line" style="font-size: x-large"></i>
                                     <span class="ml-4">Customers</span>
                                 </a>
                             </li>
+                            {% endif %}
                             <li class="">
                                 <a href="#" class="svg-icon">
                                     <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
