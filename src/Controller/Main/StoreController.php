@@ -2,18 +2,28 @@
 
 namespace App\Controller\Main;
 
+use App\Controller\CustomAbstractController;
 use App\Entity\Store;
 use App\Form\StoreType;
 use App\Repository\StoreRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/store')]
-class StoreController extends AbstractController
+class StoreController extends CustomAbstractController
 {
-    #[Route('/', name: 'app_store_index', methods: ['GET'])]
+    #[Route(
+        '/',
+        name: 'app_store_index',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "List all stores",
+            "role" => "user"
+        ],
+        methods: ['GET'])]
     public function index(StoreRepository $storeRepository): Response
     {
         return $this->render('store/index.html.twig', [
@@ -21,7 +31,17 @@ class StoreController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_store_new', methods: ['GET', 'POST'])]
+    #[Route(
+        '/new',
+        name: 'app_store_new',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Create new store",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function new(Request $request, StoreRepository $storeRepository): Response
     {
         $store = new Store();
@@ -39,7 +59,17 @@ class StoreController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_store_show', methods: ['GET'])]
+    #[Route(
+        '/{id}',
+        name: 'app_store_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Detailed info for given Store",
+            "role" => "superadmin"
+        ],
+        methods: ['GET'])]
     public function show(Store $store): Response
     {
         return $this->render('store/show.html.twig', [
@@ -47,7 +77,17 @@ class StoreController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_store_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        '/{id}/edit',
+        name: 'app_store_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit given Store",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function edit(Request $request, Store $store, StoreRepository $storeRepository): Response
     {
         $form = $this->createForm(StoreType::class, $store);
@@ -64,10 +104,20 @@ class StoreController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_store_delete', methods: ['POST'])]
+    #[Route(
+        '/{id}',
+        name: 'app_store_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Delete given Store",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])]
     public function delete(Request $request, Store $store, StoreRepository $storeRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$store->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $store->getId(), $request->request->get('_token'))) {
             $storeRepository->remove($store);
         }
 

@@ -13,7 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/product')]
 class ProductController extends CustomAbstractController
 {
-    #[Route('/', name: 'app_product_index', methods: ['GET'])]
+    #[Route(
+        '/',
+        name: 'app_product_index',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "All products",
+            "role" => "user"
+        ],
+        methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
         return $this->render('main/product/index.html.twig', [
@@ -21,7 +31,16 @@ class ProductController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[Route('/new',
+        name: 'app_product_new',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Create new product",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function new(Request $request, ProductRepository $productRepository): Response
     {
         /*$product = (new Product())
@@ -46,7 +65,16 @@ class ProductController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    #[Route('/{id}',
+        name: 'app_product_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Detailed info for given product",
+            "role" => "user"
+        ],
+        methods: ['GET'])]
     public function show(Product $product): Response
     {
         return $this->render('main/product/show.html.twig', [
@@ -54,7 +82,17 @@ class ProductController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        '/{id}/edit',
+        name: 'app_product_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit given product",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, ProductRepository $productRepository): Response
     {
         $form = $this->createForm(ProductType::class, $product);
@@ -72,7 +110,18 @@ class ProductController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
+    #[Route(
+        '/{id}',
+        name: 'app_product_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Delete given product",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])
+    ]
     public function delete(Request $request, Product $product, ProductRepository $productRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->request->get('_token'))) {

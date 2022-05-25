@@ -13,7 +13,17 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/product/currency')]
 class CurrencyController extends CustomAbstractController
 {
-    #[Route('/', name: 'app_currency_index', methods: ['GET'])]
+    #[Route(
+        '/',
+        name: 'app_currency_index',
+        options: ["system" => "false"],
+        defaults: [
+            "description" => "Index page for currency",
+            "permission" => "user"
+        ],
+        methods: ['GET'],
+    )
+    ]
     public function index(CurrencyRepository $currencyRepository): Response
     {
         return $this->render('/main/currency/index.html.twig', [
@@ -21,7 +31,18 @@ class CurrencyController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_currency_new', methods: ['GET', 'POST'])]
+    #[Route(
+        '/new',
+        name: 'app_currency_new',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Create new currency",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST']
+    )]
     public function new(Request $request, CurrencyRepository $currencyRepository): Response
     {
         $currency = new Currency();
@@ -40,7 +61,17 @@ class CurrencyController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_currency_show', methods: ['GET'])]
+    #[Route(
+        '/{id}',
+        name: 'app_currency_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Detailed info about currency",
+            "role" => "user"
+        ],
+        methods: ['GET'])]
     public function show(Currency $currency): Response
     {
         return $this->render('/main/currency/show.html.twig', [
@@ -48,7 +79,17 @@ class CurrencyController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_currency_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        '/{id}/edit',
+        name: 'app_currency_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit currency",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function edit(Request $request, Currency $currency, CurrencyRepository $currencyRepository): Response
     {
         $form = $this->createForm(CurrencyType::class, $currency);
@@ -66,7 +107,17 @@ class CurrencyController extends CustomAbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_currency_delete', methods: ['POST'])]
+    #[Route(
+        '/{id}',
+        name: 'app_currency_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Remove given currency",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])]
     public function delete(Request $request, Currency $currency, CurrencyRepository $currencyRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $currency->getId(), $request->request->get('_token'))) {

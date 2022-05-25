@@ -15,7 +15,10 @@ class AuthController extends CustomAbstractController
         'login',
         name: 'app_auth_login',
         options: ["system" => "true"],
-        defaults: ["description" => "Login in page"])]
+        defaults: [
+            "description" => "Login in page",
+            "role" => ""
+        ])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         return $this->render('main/auth/login.html.twig', [
@@ -28,7 +31,10 @@ class AuthController extends CustomAbstractController
         'reset_password',
         name: 'app_auth_reset_password',
         options: ["system" => "true"],
-        defaults: ["description" => "Reset user's password by sending a temporary verification key to user's email"]
+        defaults: [
+            "description" => "Reset user's password by sending a temporary verification key to user's email",
+            "role" => ""
+        ]
     )]
     public function resetPassword(): Response
     {
@@ -39,7 +45,10 @@ class AuthController extends CustomAbstractController
         'auto_auth',
         name: 'app_auth_auto_auth',
         options: ["system" => "true"],
-        defaults: ["description" => "Automatically authenticate user based on tokens"]
+        defaults: [
+            "description" => "Automatically authenticate user based on tokens",
+            "role" => ""
+        ]
     )]
     public function autoAuth(AuthenticationUtils $authenticationUtils): Response
     {

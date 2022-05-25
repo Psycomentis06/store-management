@@ -2,6 +2,7 @@
 
 namespace App\Controller\Main;
 
+use App\Controller\CustomAbstractController;
 use App\Entity\Inventory;
 use App\Form\InventoryType;
 use App\Repository\InventoryRepository;
@@ -11,9 +12,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/inventory')]
-class InventoryController extends AbstractController
+class InventoryController extends CustomAbstractController
 {
-    #[Route('/', name: 'app_inventory_index', methods: ['GET'])]
+    #[Route(
+        '/',
+        name: 'app_inventory_index',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "List page for all inventories",
+            "role" => "superadmin"
+        ],
+        methods: ['GET'])]
     public function index(InventoryRepository $inventoryRepository): Response
     {
         return $this->render('inventory/index.html.twig', [
@@ -21,7 +32,18 @@ class InventoryController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_inventory_new', methods: ['GET', 'POST'])]
+    #[Route(
+        '/new',
+        name: 'app_inventory_new',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Create new inventory",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST']
+    )]
     public function new(Request $request, InventoryRepository $inventoryRepository): Response
     {
         $inventory = new Inventory();
@@ -39,7 +61,17 @@ class InventoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_inventory_show', methods: ['GET'])]
+    #[Route(
+        '/{id}',
+        name: 'app_inventory_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Detailed inventory",
+            "role" => "superadmin"
+        ],
+        methods: ['GET'])]
     public function show(Inventory $inventory): Response
     {
         return $this->render('inventory/show.html.twig', [
@@ -47,7 +79,18 @@ class InventoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_inventory_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        '/{id}/edit',
+        name: 'app_inventory_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit given inventory",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST']
+    )]
     public function edit(Request $request, Inventory $inventory, InventoryRepository $inventoryRepository): Response
     {
         $form = $this->createForm(InventoryType::class, $inventory);
@@ -64,7 +107,17 @@ class InventoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_inventory_delete', methods: ['POST'])]
+    #[Route(
+        '/{id}',
+        name: 'app_inventory_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Delete given inventory",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])]
     public function delete(Request $request, Inventory $inventory, InventoryRepository $inventoryRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$inventory->getId(), $request->request->get('_token'))) {

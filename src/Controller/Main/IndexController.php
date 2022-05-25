@@ -12,7 +12,10 @@ class IndexController extends CustomAbstractController
         '/',
         name: 'app_index',
         options: ["system" => "true"],
-        defaults: ["description" => "Application's default index route (home page route)"],
+        defaults: [
+            "description" => "Application's default index route (home page route | Dashboard)",
+            "role" => "user"
+        ],
     )]
     public function index(): Response
     {
@@ -25,7 +28,10 @@ class IndexController extends CustomAbstractController
         '/login',
         name: 'app_login',
         options: ["system" => "true"],
-        defaults: ["description" => "Redirect users to the real login page on url '/auth/login'"]
+        defaults: [
+            "description" => "Redirect users to the real login page on url '/auth/login'",
+            "role" => ""
+        ]
     )]
     public function login(): Response
     {
