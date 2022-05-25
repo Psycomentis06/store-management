@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\_Interface\SearchableEntityInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -24,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     private string $username;
 
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users')]
-    private $roles;
+    private Collection $roles;
 
     #[ORM\Column(type: 'string')]
     private string $password;
@@ -43,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
 
     #[Pure] public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles = new ArrayCollection([]);
     }
 
     public static function getDefaultSearchFieldName(): string
@@ -90,11 +91,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
             $res[] = $role->getRole();
         }
         return array_unique($res);
-    }
-
-    public function getRolesObj()
-    {
-        return $this->roles;
     }
 
     public function addRole(Role $role): self
@@ -201,5 +197,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     public function getSearchCardImage(): ?string
     {
         return null;
+    }
+
+    public function getPermissions(): array
+    {
+        $res = [];
+        $roles = $this->getRolesObj();
+        foreach ($roles->getKeys() as $key) {
+            $role = $roles->get($key);
+            if ($role instanceof Role) {
+                $permissions = $role->getPermissions();
+                foreach ($permissions->getKeys() as $pkey) {
+                    $permission = $permissions->get($pkey);
+                    if ($permission instanceof Permission) {
+                        $res[] = $permission->getPermission();
+                    }
+                }
+            }
+        }
+        return $res;
+    }
+
+    public function getRolesObj(): Collection
+    {
+        return $this->roles;
     }
 }

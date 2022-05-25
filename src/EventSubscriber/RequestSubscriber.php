@@ -49,12 +49,20 @@ class RequestSubscriber implements EventSubscriberInterface
             } else {
                 if ($currentUser instanceof User) {
                     $currentRoutePermission = Routes::getPermissionName($request->get('_controller'));
-                    try {
+                    /*
+                     * Version N°1
+                     * try {
                         $userPermissions = $this->userRepository->findOneByPermissionName($currentUser->getId(), $currentRoutePermission);
                         if (empty($userPermissions))
                             throw new AccessDeniedHttpException("No permission to access this page");
                     } catch (NonUniqueResultException $e) {
-                    }
+                    }*/
+
+                    /**
+                     * Ver 2
+                     */
+                    if (!in_array($currentRoutePermission, $currentUser->getPermissions()))
+                        throw new AccessDeniedHttpException("No permission to access this page");
                 }
             }
         }
