@@ -27,6 +27,9 @@ class Permission implements SearchableEntityInterface
     #[ORM\OneToOne(mappedBy: 'permission', targetEntity: Route::class, cascade: ['persist', 'remove'])]
     private Route $route;
 
+    #[ORM\Column(type: 'string', length: 30, nullable: true)]
+    private $defaultRole;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -116,5 +119,17 @@ class Permission implements SearchableEntityInterface
     public function getSearchCardImage(): ?string
     {
         return null;
+    }
+
+    public function getDefaultRole(): ?string
+    {
+        return $this->defaultRole;
+    }
+
+    public function setDefaultRole(?string $defaultRole): self
+    {
+        $this->defaultRole = $defaultRole;
+
+        return $this;
     }
 }
