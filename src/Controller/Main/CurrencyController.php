@@ -19,7 +19,7 @@ class CurrencyController extends CustomAbstractController
         options: ["system" => "false"],
         defaults: [
             "description" => "Index page for currency",
-            "permission" => "user"
+            "role" => "user"
         ],
         methods: ['GET'],
     )
