@@ -33,9 +33,16 @@ class RoleService
         }
     }
 
-    public function cloneRole(string $from, string $newRoleName)
+    public function cloneRole(string $from, string $newRoleName): bool
     {
-
+        $role = $this->roleRepository->findOneBy(['role' => $from]);
+        if (!empty($role)) {
+            $clonedRole = clone $role;
+            $clonedRole->setRole($newRoleName);
+            $this->roleRepository->add($clonedRole);
+            return true;
+        }
+        return false;
     }
 
 }
