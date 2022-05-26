@@ -456,6 +456,16 @@
                 </div>
             </div>
         {% endfor %}
+        {% for msg in app.flashes('errors') %}
+            <div class="alert alert-danger" role="alert">
+                <div class="iq-alert-icon">
+                    <i class="ri-alert-line"></i>
+                </div>
+                <div class="iq-alert-text">
+                    {{ msg }}
+                </div>
+            </div>
+        {% endfor %}
         {% block body %}{% endblock %}
     </div>
 </div>
