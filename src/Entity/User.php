@@ -42,6 +42,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: DigitalPurchase::class)]
     private $digitalPurchases;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $manager = false;
+
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection([]);
@@ -102,9 +105,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         return $this;
     }
 
-    public function removeRole(Role $role): self
+    public function removeRole(Role|string $role): self
     {
-        $this->roles->removeElement($role);
+        if (gettype($role) === 'string') {
+            foreach ($this->roles as $roleKey => $roleItem) {
+                $currentRole = $roleItem->getRole();
+                if ($currentRole === $role) {
+                    $this->roles->remove($roleKey);
+                    return $this;
+                }
+            }
+        } else {
+            $this->roles->removeElement($role);
+        }
         return $this;
     }
 
@@ -238,6 +251,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
                 $digitalPurchase->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getManager(): ?bool
+    {
+        return $this->manager;
+    }
+
+    public function setManager(bool $manager): self
+    {
+        $this->manager = $manager;
 
         return $this;
     }
