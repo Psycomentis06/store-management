@@ -41,6 +41,7 @@ class PermissionsSync extends Command
             if (empty($dbPermission)) {
                 $permission = new Permission();
                 $permission->setPermission($permissionName);
+                $permission->setDefaultRole($routeObj->getDefault('role'));
                 $entityManager->persist($permission);
             }
         }
