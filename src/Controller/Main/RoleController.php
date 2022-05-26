@@ -10,6 +10,7 @@ use App\Repository\RoleRepository;
 use App\Service\RoleService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role')]
@@ -86,8 +87,11 @@ class RoleController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET'])]
-    public function show(Role $role): Response
+    public function show(int $id, RoleRepository $roleRepository): Response
     {
+        $role = $roleRepository->find($id);
+        if (empty($role))
+            throw new NotFoundHttpException("Role $id not found");
         return $this->render('role/show.html.twig', [
             'role' => $role,
         ]);
@@ -104,13 +108,23 @@ class RoleController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function edit(Request $request, Role $role, RoleRepository $roleRepository): Response
+    public function edit(Request $request, int $id, RoleRepository $roleRepository): Response
     {
+        $role = $roleRepository->find($id);
+        if (empty($role))
+            throw new NotFoundHttpException("Role $id not found");
+
         $form = $this->createForm(RoleType::class, $role);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $roleRepository->add($role);
+            if ($role->getSystem()) {
+                // Can't update system roles
+                $this->addFlash('error', 'System roles cannot be updated or deleted ');
+            } else {
+                $roleRepository->add($role);
+                $this->addFlash('success', "Role $id edited successfully ");
+            }
             return $this->redirectToRoute('app_role_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -131,10 +145,18 @@ class RoleController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['POST'])]
-    public function delete(Request $request, Role $role, RoleRepository $roleRepository): Response
+    public function delete(Request $request, int $id, RoleRepository $roleRepository): Response
     {
+        $role = $roleRepository->find($id);
+        if (empty($role))
+            throw new NotFoundHttpException("Role $id not found");
         if ($this->isCsrfTokenValid('delete' . $role->getId(), $request->request->get('_token'))) {
-            $roleRepository->remove($role);
+            if ($role->getSystem()) {
+                $this->addFlash('error', 'System roles cannot be updated or deleted ');
+            } else {
+                $roleRepository->remove($role);
+                $this->addFlash('success', "Role $id deleted");
+            }
         }
 
         return $this->redirectToRoute('app_role_index', [], Response::HTTP_SEE_OTHER);
