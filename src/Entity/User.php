@@ -39,12 +39,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     #[ORM\Column(type: 'string', length: 100)]
     private string $email;
 
-    #[ORM\ManyToOne(targetEntity: DigitalPurchase::class, inversedBy: 'agent')]
-    private DigitalPurchase $digitalPurchase;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: DigitalPurchase::class)]
+    private $digitalPurchases;
 
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection([]);
+        $this->digitalPurchases = new ArrayCollection();
     }
 
     public static function getDefaultSearchFieldName(): string
@@ -172,18 +173,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         return $this->username;
     }
 
-    public function getDigitalPurchase(): ?DigitalPurchase
-    {
-        return $this->digitalPurchase;
-    }
-
-    public function setDigitalPurchase(?DigitalPurchase $digitalPurchase): self
-    {
-        $this->digitalPurchase = $digitalPurchase;
-
-        return $this;
-    }
-
     public function getSearchCardTitle(): string
     {
         return $this->username;
@@ -221,5 +210,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     public function getRolesObj(): Collection
     {
         return $this->roles;
+    }
+
+    /**
+     * @return Collection<int, DigitalPurchase>
+     */
+    public function getDigitalPurchases(): Collection
+    {
+        return $this->digitalPurchases;
+    }
+
+    public function addDigitalPurchase(DigitalPurchase $digitalPurchase): self
+    {
+        if (!$this->digitalPurchases->contains($digitalPurchase)) {
+            $this->digitalPurchases[] = $digitalPurchase;
+            $digitalPurchase->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDigitalPurchase(DigitalPurchase $digitalPurchase): self
+    {
+        if ($this->digitalPurchases->removeElement($digitalPurchase)) {
+            // set the owning side to null (unless already changed)
+            if ($digitalPurchase->getUser() === $this) {
+                $digitalPurchase->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

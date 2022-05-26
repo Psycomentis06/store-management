@@ -17,9 +17,7 @@ class UserType extends AbstractType
             ->add('email')
             ->add('roles')
             ->add('metadata')
-            ->add('state')
-            ->add('digitalPurchase')
-        ;
+            ->add('state');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

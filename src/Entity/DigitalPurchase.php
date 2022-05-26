@@ -35,16 +35,16 @@ class DigitalPurchase implements SearchableEntityInterface
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'digitalPurchases')]
     private Customer $consumer;
 
-    #TODO change to OneToMany instead & Add production relation
-    #[ORM\OneToMany(mappedBy: 'digitalPurchase', targetEntity: User::class)]
-    private Collection $agent;
+
 
     #[ORM\Column(type: 'json')]
     private array $credentials = [];
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'digitalPurchases')]
+    private $user;
+
     public function __construct()
     {
-        $this->agent = new ArrayCollection();
         $this->date = new \DateTime();
     }
 
@@ -125,36 +125,6 @@ class DigitalPurchase implements SearchableEntityInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getAgent(): Collection
-    {
-        return $this->agent;
-    }
-
-    public function addAgent(User $agent): self
-    {
-        if (!$this->agent->contains($agent)) {
-            $this->agent[] = $agent;
-            $agent->setDigitalPurchase($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAgent(User $agent): self
-    {
-        if ($this->agent->removeElement($agent)) {
-            // set the owning side to null (unless already changed)
-            if ($agent->getDigitalPurchase() === $this) {
-                $agent->setDigitalPurchase(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCredentials(): ?array
     {
         return $this->credentials;
@@ -186,5 +156,17 @@ class DigitalPurchase implements SearchableEntityInterface
     public function getSearchCardImage(): ?string
     {
         return null;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }
