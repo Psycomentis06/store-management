@@ -7,15 +7,19 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Store</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for inventory in inventories %}
             <tr>
                 <td>{{ inventory.id }}</td>
+                <td>
+                    <a href="{{ inventory.store ? path('app_store_show', {'id': inventory.store.id}) : path('app_inventory_index') }}"> {{ inventory.store ? inventory.store.name : '' }} </a>
+                </td>
                 <td>
                     <a href="{{ path('app_inventory_show', {'id': inventory.id}) }}">show</a>
                     <a href="{{ path('app_inventory_edit', {'id': inventory.id}) }}">edit</a>
