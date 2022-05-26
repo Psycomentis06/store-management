@@ -3,9 +3,21 @@
 {% block title %}New Role{% endblock %}
 
 {% block body %}
-    <h1>Create new Role</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1>Create new Role</h1>
+                {{ include('role/_form.html.twig') }}
+            </div>
+            <div class="col-6">
+                <h1> Clone existing role </h1>
+                {{ form_start(form2) }}
+                {{ form_widget(form2) }}
+                <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+                {{ form_end(form2) }}
+            </div>
+        </div>
 
-    {{ include('role/_form.html.twig') }}
-
-    <a href="{{ path('app_role_index') }}">back to list</a>
+        <a href="{{ path('app_role_index') }}">back to list</a>
+    </div>
 {% endblock %}
