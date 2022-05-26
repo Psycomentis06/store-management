@@ -19,6 +19,16 @@
                 <th>System</th>
                 <td>{{ role.system ? 'Yes' : 'No' }}</td>
             </tr>
+            <tr class="jumbotron">
+                <th>Permissions ({{ role.permissions | length }}) </th>
+                <td>
+                    <ul>
+                        {% for p in role.permissions %}
+                            <li> {{ p.permission }} </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
         </tbody>
     </table>
 
