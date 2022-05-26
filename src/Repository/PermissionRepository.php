@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Permission;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -73,4 +74,13 @@ class PermissionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByDefaultRole(string $defaultRoleName)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('LOWER (p.defaultRole) = LOWER(:val)')
+            ->setParameter('val', $defaultRoleName)
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+    }
 }
