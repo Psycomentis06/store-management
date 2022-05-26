@@ -3,8 +3,10 @@
 namespace App\Controller\Main;
 
 use App\Controller\CustomAbstractController;
+use App\Entity\Inventory;
 use App\Entity\Store;
 use App\Form\StoreType;
+use App\Repository\InventoryRepository;
 use App\Repository\StoreRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,14 +44,25 @@ class StoreController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function new(Request $request, StoreRepository $storeRepository): Response
+    public function new(Request $request, StoreRepository $storeRepository, InventoryRepository $inventoryRepository): Response
     {
-        $store = new Store();
+        $storeAddress = [
+            ['key' => 'Country', 'value' => ''],
+            ['key' => 'City', 'value' => ''],
+            ['key' => 'Address', 'value' => ''],
+        ];
+        $store = (new Store())
+            ->setAddress($storeAddress);
         $form = $this->createForm(StoreType::class, $store);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $inventory = (new Inventory())
+                ->setStore($store);
             $storeRepository->add($store);
+            $this->addFlash('success', 'Store created');
+            $inventoryRepository->add($inventory);
+            $this->addFlash('success', 'Inventory created for store#' . $store->getId());
             return $this->redirectToRoute('app_store_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -95,6 +108,7 @@ class StoreController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $storeRepository->add($store);
+            $this->addFlash('success', 'Store #' . $store->getId() . ' edited');
             return $this->redirectToRoute('app_store_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -119,6 +133,7 @@ class StoreController extends CustomAbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $store->getId(), $request->request->get('_token'))) {
             $storeRepository->remove($store);
+            $this->addFlash('success', 'Store #' . $store->getId() . ' removed');
         }
 
         return $this->redirectToRoute('app_store_index', [], Response::HTTP_SEE_OTHER);
