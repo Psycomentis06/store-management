@@ -7,19 +7,27 @@
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for store in stores %}
             <tr>
                 <td>{{ store.id }}</td>
                 <td>{{ store.name }}</td>
-                <td>{{ store.address ? store.address|json_encode : '' }}</td>
+                <td>
+                    <ul class="list-unstyled">
+                        {% if store.address is not empty %}
+                            {% for i in store.address %}
+                                <li><strong>{{ i.key }} :</strong> {{ i.value }} </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </td>
                 <td>
                     <a href="{{ path('app_store_show', {'id': store.id}) }}">show</a>
                     <a href="{{ path('app_store_edit', {'id': store.id}) }}">edit</a>
