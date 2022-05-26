@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/user')]
@@ -42,14 +43,21 @@ class UserController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user);
+            $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+            if (count($user->getRolesObj()) >= 1) {
+                $userRepository->add($user);
+                $this->addFlash('success', 'New user added successfully');
+            } else {
+                $this->addFlash('error', 'User not added: At least one Role should be present');
+            }
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -89,14 +97,27 @@ class UserController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->add($user);
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            if (!$user->getManager()) {
+                $hashedPassword = $userPasswordHasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($hashedPassword);
+                if (count($user->getRolesObj()) >= 1) {
+                    $userRepository->add($user);
+                    $this->addFlash('success', 'User ' . $user->getId() . ' edited successfully');
+                } else {
+                    $this->addFlash('error', 'User not edited: At least one Role should be present');
+                }
+                $userRepository->add($user);
+                return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            } else {
+                $this->addFlash('error', 'Users of type \'manager\' can\'t be edited or removed');
+            }
         }
 
         return $this->renderForm('user/edit.html.twig', [
@@ -119,7 +140,12 @@ class UserController extends CustomAbstractController
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($user);
+            if (!$user->getManager()) {
+                $userRepository->remove($user);
+                $this->addFlash('success', 'User ' . $user->getId() . ' removed ');
+            } else {
+                $this->addFlash('error', 'Users of type \'manager\' can\'t be edited or removed');
+            }
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
