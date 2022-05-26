@@ -1,19 +1,29 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Main;
 
+use App\Controller\CustomAbstractController;
 use App\Entity\Role;
 use App\Form\RoleType;
 use App\Repository\RoleRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/role')]
-class RoleController extends AbstractController
+class RoleController extends CustomAbstractController
 {
-    #[Route('/', name: 'app_role_index', methods: ['GET'])]
+    #[Route(
+        '/',
+        name: 'app_role_index',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Roles list page",
+            "role" => "superadmin"
+        ],
+        methods: ['GET'])]
     public function index(RoleRepository $roleRepository): Response
     {
         return $this->render('role/index.html.twig', [
@@ -21,7 +31,17 @@ class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_role_new', methods: ['GET', 'POST'])]
+    #[Route(
+        '/new',
+        name: 'app_role_new',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Create new role",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function new(Request $request, RoleRepository $roleRepository): Response
     {
         $role = new Role();
@@ -39,7 +59,17 @@ class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_role_show', methods: ['GET'])]
+    #[Route(
+        '/{id}',
+        name: 'app_role_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Detailed info about given role",
+            "role" => "superadmin"
+        ],
+        methods: ['GET'])]
     public function show(Role $role): Response
     {
         return $this->render('role/show.html.twig', [
@@ -47,7 +77,17 @@ class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_role_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        '/{id}/edit',
+        name: 'app_role_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit Given Role",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])]
     public function edit(Request $request, Role $role, RoleRepository $roleRepository): Response
     {
         $form = $this->createForm(RoleType::class, $role);
@@ -64,10 +104,20 @@ class RoleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_role_delete', methods: ['POST'])]
+    #[Route(
+        '/{id}',
+        name: 'app_role_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Delete Given Role",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])]
     public function delete(Request $request, Role $role, RoleRepository $roleRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$role->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $role->getId(), $request->request->get('_token'))) {
             $roleRepository->remove($role);
         }
 
