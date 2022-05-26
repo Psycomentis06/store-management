@@ -35,6 +35,11 @@ class Role implements SearchableEntityInterface
         $this->users = new ArrayCollection();
     }
 
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'role';
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,12 @@ class Role implements SearchableEntityInterface
             $this->permissions[] = $permission;
         }
 
+        return $this;
+    }
+
+    public function setPermission(array $permissions): self
+    {
+        $this->permissions = new ArrayCollection($permissions);
         return $this;
     }
 
@@ -113,14 +124,9 @@ class Role implements SearchableEntityInterface
         return $this;
     }
 
-    public function __toString():string
+    public function __toString(): string
     {
         return $this->role;
-    }
-
-    public static function getDefaultSearchFieldName(): string
-    {
-        return 'role';
     }
 
     public function getSearchCardTitle(): string
