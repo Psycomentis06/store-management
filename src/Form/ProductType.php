@@ -34,7 +34,7 @@ class ProductType extends AbstractType
                 'guarantee',
                 IntegerType::class,
                 [
-                    'label' => 'Currency (Months)'
+                    'label' => 'Guarantee (Months)'
                 ])
             ->add('properties',
                 CollectionType::class,
