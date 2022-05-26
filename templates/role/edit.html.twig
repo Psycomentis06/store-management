@@ -3,11 +3,23 @@
 {% block title %}Edit Role{% endblock %}
 
 {% block body %}
-    <h1>Edit Role</h1>
+    <div class="container">
+        <h1>Edit Role</h1>
+        <br>
+        <div class="d-flex align-items-center">
+            <a class="btn btn-info mx-2" href="{{ path('app_role_index') }}">Back to list</a>
+            {{ include('role/_delete_form.html.twig') }}
+        </div>
+        <br>
 
-    {{ include('role/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('role/_form.html.twig', {'button_label': 'Update'}) }}
+        <br>
+        <div class="d-flex align-items-center justify-content-between" style="width: 200px">
 
-    <a href="{{ path('app_role_index') }}">back to list</a>
+            <a class="btn btn-info" href="{{ path('app_role_index') }}">back to list</a>
+            <br>
+            {{ include('role/_delete_form.html.twig') }}
 
-    {{ include('role/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}
