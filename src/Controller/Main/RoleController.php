@@ -4,8 +4,10 @@ namespace App\Controller\Main;
 
 use App\Controller\CustomAbstractController;
 use App\Entity\Role;
+use App\Form\CloneRoleType;
 use App\Form\RoleType;
 use App\Repository\RoleRepository;
+use App\Service\RoleService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +44,7 @@ class RoleController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function new(Request $request, RoleRepository $roleRepository): Response
+    public function new(Request $request, RoleRepository $roleRepository, RoleService $roleService): Response
     {
         $role = new Role();
         $form = $this->createForm(RoleType::class, $role);
@@ -50,12 +52,26 @@ class RoleController extends CustomAbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $roleRepository->add($role);
+            $this->addFlash('success', 'Role created');
+            return $this->redirectToRoute('app_role_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $cloneRoleForm = $this->createForm(CloneRoleType::class);
+        $cloneRoleForm->handleRequest($request);
+
+        if ($cloneRoleForm->isSubmitted() && $cloneRoleForm->isValid()) {
+            $data = $cloneRoleForm->getData();
+            if ($roleService->cloneRole($data['roles'], $data['role']))
+                $this->addFlash('success', 'Role cloned');
+            else
+                $this->addFlash('error', 'Failed to clone role');
             return $this->redirectToRoute('app_role_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('role/new.html.twig', [
             'role' => $role,
             'form' => $form,
+            'form2' => $cloneRoleForm
         ]);
     }
 
