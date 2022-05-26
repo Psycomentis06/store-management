@@ -34,7 +34,8 @@ class AppFixtures extends Fixture
             $user->addRole($userRole);
         else {
             $userRole = (new Role())
-                ->setRole('user');
+                ->setRole('user')
+                ->setSystem(true);
             $manager->persist($userRole);
             $user->addRole($userRole);
         }
@@ -42,7 +43,8 @@ class AppFixtures extends Fixture
             $user->addRole($superAdminRole);
         else {
             $userRole = (new Role())
-                ->setRole('superadmin');
+                ->setRole('superadmin')
+                ->setSystem(true);
             $manager->persist($userRole);
             $user->addRole($userRole);
         }
