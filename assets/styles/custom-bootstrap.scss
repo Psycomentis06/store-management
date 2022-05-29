@@ -12,3 +12,152 @@
     display: flex;
   }
 }
+
+li.admin-link-v2 {
+  &::after {
+    content: 'Admin';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--iq-orange);
+    color: var(--iq-white);
+    padding: 2px 5px;
+    border-radius: 5px;
+    transform: rotate(-45deg);
+    font-size: .8rem;
+  }
+}
+
+li.admin-link {
+  color: var(--iq-danger);
+  text-decoration: none;
+  background-color: var(--iq-danger-100);
+  border-left: 4px solid var(--iq-danger-300);
+  transition: all 500ms ease;
+
+  svg {
+    color: var(--iq-danger);
+  }
+}
+
+.schedule-table-template {
+
+  .bg-light-gray {
+    background-color: var(--iq-light-gray);
+  }
+
+  .table-bordered thead td, .table-bordered thead th {
+    border-bottom-width: 2px;
+  }
+
+  .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--light);
+  }
+
+  .table-bordered td, .table-bordered th {
+    border: 1px solid var(--light);
+  }
+
+
+  .bg-sky.box-shadow {
+    box-shadow: 0 5px 0 0 var(--iq-primary)
+  }
+
+  .bg-orange.box-shadow {
+    box-shadow: 0 5px 0 0 var(--iq-orange)
+  }
+
+  .bg-green.box-shadow {
+    box-shadow: 0px 5px 0px 0px var(--iq-success)
+  }
+
+  .bg-yellow.box-shadow {
+    box-shadow: 0 5px 0 0 var(--iq-warning)
+  }
+
+  .bg-pink.box-shadow {
+    box-shadow: 0 5px 0 0 var(--pink)
+  }
+
+  .bg-purple.box-shadow {
+    box-shadow: 0 5 0 0 var(--iq-purple)
+  }
+
+  .bg-lightred.box-shadow {
+    box-shadow: 0 5px 0 0 var(--red)
+  }
+
+
+  .bg-sky {
+    background-color: #02c2c7
+  }
+
+  .bg-orange {
+    background-color: #e95601
+  }
+
+  .bg-green {
+    background-color: #5bbd2a
+  }
+
+  .bg-yellow {
+    background-color: #f0d001
+  }
+
+  .bg-pink {
+    background-color: #ff48a4
+  }
+
+  .bg-purple {
+    background-color: #9d60ff
+  }
+
+  .bg-lightred {
+    background-color: #ff5722
+  }
+
+  .padding-15px-lr {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .padding-5px-tb {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .margin-10px-bottom {
+    margin-bottom: 10px;
+  }
+
+  .border-radius-5 {
+    border-radius: 5px;
+  }
+
+  .margin-10px-top {
+    margin-top: 10px;
+  }
+
+  .font-size14 {
+    font-size: 14px;
+  }
+
+  .text-light-gray {
+    color: var(--gray);
+  }
+
+  .font-size13 {
+    font-size: 13px;
+  }
+
+  .table-bordered td, .table-bordered th {
+    border: 1px solid #dee2e6;
+  }
+
+  .table td, .table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+}

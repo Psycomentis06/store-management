@@ -11,6 +11,8 @@
             <th>Id</th>
             <th>Name</th>
             <th>Address</th>
+            <th>Schedule</th>
+            <th>Inventory</th>
             <th>actions</th>
         </tr>
         </thead>
@@ -27,6 +29,16 @@
                             {% endfor %}
                         {% endif %}
                     </ul>
+                </td>
+                <td>
+                    {% if store.schedule is not empty %}
+                        <a href="{{ path('app_schedule_show', {id: store.schedule.id}) }}"> {{ store.schedule.id }} </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if store.schedule is not empty %}
+                        <a href="{{ path('app_inventory_show', {id: store.inventory.id}) }}"> {{ store.inventory.id }} </a>
+                    {% endif %}
                 </td>
                 <td>
                     <a href="{{ path('app_store_show', {'id': store.id}) }}">show</a>

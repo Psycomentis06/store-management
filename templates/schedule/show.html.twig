@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block body %}
+    <h1>Schedule</h1>
+
+    <ul class="d-flex list-unstyled my-3">
+        <li class="mx-2">
+            <button class="btn btn-outline-primary" data-toggle="modal" data-target="#add-event-modal">Add New Event
+            </button>
+            <div class="modal fade" id="add-event-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 style="display: none;" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    {{ form_start(eventForm) }}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_widget(eventForm) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(eventForm) }}
+            </div>
+        </li>
+        <li class="mx-2">
+            <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#add-session-modal">Add New
+                Session
+            </button>
+            <div class="modal fade" id="add-session-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 style="display: none;" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        {{ form_start(sessionForm) }}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Session</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            {{ form_widget(sessionForm) }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                    {{ form_end(sessionForm) }}
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    {{ include('schedule/_schedule-table.html.twig') }}
+
+    <a class="btn btn-outline-primary" href="{{ path('app_store_index') }}"> Back to store list</a>
+
+
+{% endblock %}

@@ -40,15 +40,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     private string $email;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: DigitalPurchase::class)]
-    private $digitalPurchases;
+    private Collection $digitalPurchases;
 
     #[ORM\Column(type: 'boolean')]
     private bool $manager = false;
+
+    #[ORM\ManyToMany(targetEntity: WorkSession::class, mappedBy: 'users')]
+    private Collection $workSessions;
 
     #[Pure] public function __construct()
     {
         $this->roles = new ArrayCollection([]);
         $this->digitalPurchases = new ArrayCollection();
+        $this->workSessions = new ArrayCollection();
     }
 
     public static function getDefaultSearchFieldName(): string
@@ -263,6 +267,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     public function setManager(bool $manager): self
     {
         $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkSession>
+     */
+    public function getWorkSessions(): Collection
+    {
+        return $this->workSessions;
+    }
+
+    public function addWorkSession(WorkSession $workSession): self
+    {
+        if (!$this->workSessions->contains($workSession)) {
+            $this->workSessions[] = $workSession;
+            $workSession->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkSession(WorkSession $workSession): self
+    {
+        if ($this->workSessions->removeElement($workSession)) {
+            $workSession->removeUser($this);
+        }
 
         return $this;
     }

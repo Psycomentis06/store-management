@@ -26,9 +26,36 @@ class Store implements SearchableEntityInterface
     #[ORM\OneToMany(mappedBy: 'store', targetEntity: DigitalPurchase::class)]
     private Collection $digitalPurchases;
 
+    #[ORM\OneToOne(inversedBy: 'store', targetEntity: Schedule::class, cascade: ['persist', 'remove'])]
+    private Schedule $schedule;
+
+    #[ORM\OneToOne(inversedBy: 'store', targetEntity: Inventory::class, cascade: ['persist', 'remove'])]
+    private Inventory $inventory;
+
+    /**
+     * @return Inventory
+     */
+    public function getInventory(): Inventory
+    {
+        return $this->inventory;
+    }
+
+    /**
+     * @param Inventory $inventory
+     */
+    public function setInventory(Inventory $inventory): void
+    {
+        $this->inventory = $inventory;
+    }
+
     #[Pure] public function __construct()
     {
         $this->digitalPurchases = new ArrayCollection();
+    }
+
+    public static function getDefaultSearchFieldName(): string
+    {
+        return 'name';
     }
 
     public function getId(): ?int
@@ -90,11 +117,6 @@ class Store implements SearchableEntityInterface
         return $this;
     }
 
-    public static function getDefaultSearchFieldName(): string
-    {
-        return 'name';
-    }
-
     public function getSearchCardTitle(): string
     {
         return $this->name;
@@ -108,5 +130,22 @@ class Store implements SearchableEntityInterface
     public function getSearchCardImage(): ?string
     {
         return null;
+    }
+
+    public function getSchedule(): ?Schedule
+    {
+        return $this->schedule;
+    }
+
+    public function setSchedule(?Schedule $schedule): self
+    {
+        $this->schedule = $schedule;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

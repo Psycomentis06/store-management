@@ -4,10 +4,19 @@ namespace App\Controller\Main;
 
 use App\Controller\CustomAbstractController;
 use App\Entity\Inventory;
+use App\Entity\Schedule;
 use App\Entity\Store;
+use App\Entity\WorkEvent;
+use App\Entity\WorkSession;
 use App\Form\StoreType;
+use App\Form\WorkEventType;
+use App\Form\WorkSessionType;
 use App\Repository\InventoryRepository;
+use App\Repository\ScheduleRepository;
 use App\Repository\StoreRepository;
+use App\Repository\WorkEventRepository;
+use App\Repository\WorkSessionRepository;
+use App\Service\ScheduleService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +53,7 @@ class StoreController extends CustomAbstractController
             "role" => "superadmin"
         ],
         methods: ['GET', 'POST'])]
-    public function new(Request $request, StoreRepository $storeRepository, InventoryRepository $inventoryRepository): Response
+    public function new(Request $request, StoreRepository $storeRepository, InventoryRepository $inventoryRepository, ScheduleRepository $scheduleRepository): Response
     {
         $storeAddress = [
             ['key' => 'Country', 'value' => ''],
@@ -57,8 +66,14 @@ class StoreController extends CustomAbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $inventory = (new Inventory())
-                ->setStore($store);
+            $schedule = new Schedule();
+            $scheduleRepository->add($schedule);
+            $this->addFlash('success', 'Schedule created');
+            $inventory = new Inventory();
+            $store
+                ->setSchedule($schedule)
+                ->setInventory($inventory);
+
             $storeRepository->add($store);
             $this->addFlash('success', 'Store created');
             $inventoryRepository->add($inventory);
@@ -131,11 +146,56 @@ class StoreController extends CustomAbstractController
         methods: ['POST'])]
     public function delete(Request $request, Store $store, StoreRepository $storeRepository): Response
     {
+
+        $id = $store->getId();
         if ($this->isCsrfTokenValid('delete' . $store->getId(), $request->request->get('_token'))) {
             $storeRepository->remove($store);
-            $this->addFlash('success', 'Store #' . $store->getId() . ' removed');
+            $this->addFlash('success', 'Store #' . $id . ' removed');
         }
 
         return $this->redirectToRoute('app_store_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route(
+        '/{id}/schedule/',
+        name: 'app_schedule_show',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Schedule Table for given Store",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])
+    ]
+    public function storeSchedule(Request $request, WorkEventRepository $workEventRepository, WorkSessionRepository $workSessionRepository, Schedule $schedule, ScheduleService $scheduleService): Response
+    {
+        $scheduleService->minifyData($schedule);
+
+        $workEvent = new WorkEvent();
+        $createEventForm = $this->createForm(WorkEventType::class, $workEvent);
+
+        $createEventForm->handleRequest($request);
+        if ($createEventForm->isSubmitted() && $createEventForm->isValid()) {
+            $workEvent->addSchedule($schedule);
+            $workEventRepository->add($workEvent);
+            $this->addFlash('success', 'New event is created');
+        }
+
+        $workSession = new WorkSession();
+
+        $createSessionForm = $this->createForm(WorkSessionType::class, $workSession);
+        $createSessionForm->handleRequest($request);
+        if ($createSessionForm->isSubmitted() && $createSessionForm->isValid()) {
+            $workSession->setSchedule($schedule);
+            $workSessionRepository->add($workSession);
+            $this->addFlash('success', 'New Session is created');
+        }
+
+        return $this->render('schedule/show.html.twig', [
+            'schedule' => $schedule,
+            'eventForm' => $createEventForm->createView(),
+            'sessionForm' => $createSessionForm->createView()
+        ]);
     }
 }

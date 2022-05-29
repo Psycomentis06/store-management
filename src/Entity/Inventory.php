@@ -16,8 +16,8 @@ class Inventory
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\OneToOne(targetEntity: Store::class, cascade: ['persist', 'remove'])]
-    private ?Store $store;
+    #[ORM\OneToOne(mappedBy: 'inventory', targetEntity: Store::class, cascade: ['persist', 'remove'])]
+    private Store $store;
 
     #[ORM\OneToMany(mappedBy: 'inventory', targetEntity: InventoryItem::class)]
     private Collection $items;

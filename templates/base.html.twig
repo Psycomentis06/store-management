@@ -55,7 +55,46 @@
                             </a>
                         </li>
                     {% endif %}
-                    <li class=" ">
+                    <li class="  ">
+                        <a href="#mystore" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
+                            <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span class="ml-4">My Store</span>
+                            <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                            <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                        </a>
+                        <ul id="mystore" class="iq-submenu collapse">
+                            {% if can_access_route('app_user_index') %}
+                                <li class="{{ is_route_active('app_user_index') }}">
+                                    <a href={{ path('app_user_index') }}>
+                                        <i class="la la-users-cog" style="font-size: x-large"></i>
+                                        <span>My Store</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if can_access_route('app_role_index') %}
+                                <li class="{{ is_route_active('app_role_index') }}">
+                                    <a href={{ path('app_role_index') }}>
+                                        <i class="la la-user-tag" style="font-size: x-large"></i>
+                                        <span>My Schedule</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if can_access_route('app_role_index') %}
+                                <li class="{{ is_route_active('app_role_index') }}">
+                                    <a href={{ path('app_role_index') }}>
+                                        <i class="la la-user-tag" style="font-size: x-large"></i>
+                                        <span>My Store Inventory</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    <li class=" admin-link-v2 ">
                         <a href="#employees" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
                             <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -86,7 +125,7 @@
                             {% endif %}
                         </ul>
                     </li>
-                    <li class=" ">
+                    <li class=" admin-link-v2 ">
                         <a href="#stores" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
                             <i class="las la-store-alt" style="font-size: x-large"></i>
                             <span class="ml-4">Store</span>
@@ -94,14 +133,6 @@
                             <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                         </a>
                         <ul id="stores" class="iq-submenu collapse">
-                            {% if can_access_route('app_store_show_active') %}
-                                <li class="{{ is_route_active('app_store_show_active') }}">
-                                    <a href={{ path('app_store_index') }}>
-                                        <i class="las la-store-alt" style="font-size: x-large"></i>
-                                        <span>My Store</span>
-                                    </a>
-                                </li>
-                            {% endif %}
                             {% if can_access_route('app_store_index') %}
                                 <li class="{{ is_route_active('app_store_index') }}">
                                     <a href={{ path('app_store_index') }}>
@@ -120,7 +151,7 @@
                             {% endif %}
                         </ul>
                     </li>
-                    <li class=" ">
+                    <li class=" admin-link-v2 ">
                         <a href="#products" class="svg-icon collapsed" data-toggle="collapse" aria-expanded="false">
                             <i class="ri-product-hunt-line" style="font-size: x-large"></i>
                             <span class="ml-4">Products</span>
@@ -147,14 +178,14 @@
                         </ul>
                     </li>
                     {% if can_access_route('app_customer_index') %}
-                        <li class="{{ is_route_active('app_customer_index') }}">
+                        <li class=" admin-link-v2 {{ is_route_active('app_customer_index') }}">
                             <a href="{{ path('app_customer_index') }}">
                                 <i class="ri-customer-service-line" style="font-size: x-large"></i>
                                 <span class="ml-4">Customers</span>
                             </a>
                         </li>
                     {% endif %}
-                    <li class="">
+                    <li class=" admin-link-v2 ">
                         <a href="#" class="svg-icon">
                             <svg class="svg-icon" width="25" height="25" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
