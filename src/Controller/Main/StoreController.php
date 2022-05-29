@@ -170,7 +170,7 @@ class StoreController extends CustomAbstractController
     ]
     public function storeSchedule(Request $request, WorkEventRepository $workEventRepository, WorkSessionRepository $workSessionRepository, Schedule $schedule, ScheduleService $scheduleService): Response
     {
-        $scheduleService->minifyData($schedule);
+        $scheduleOrganised = $scheduleService->organizeData($schedule);
 
         $workEvent = new WorkEvent();
         $createEventForm = $this->createForm(WorkEventType::class, $workEvent);
@@ -195,7 +195,8 @@ class StoreController extends CustomAbstractController
         return $this->render('schedule/show.html.twig', [
             'schedule' => $schedule,
             'eventForm' => $createEventForm->createView(),
-            'sessionForm' => $createSessionForm->createView()
+            'sessionForm' => $createSessionForm->createView(),
+            'data' => $scheduleOrganised
         ]);
     }
 }

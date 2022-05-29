@@ -13,3 +13,4 @@ import './bootstrap';
 import './scripts/json_key_value_form_type';
 import './scripts/single_file_picker'
 import './vue/global_search/index'
+import './scripts/timezone-client'

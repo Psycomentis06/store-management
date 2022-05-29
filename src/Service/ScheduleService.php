@@ -14,7 +14,7 @@ class ScheduleService
         $this->workEventRepository = $workEventRepository;
     }
 
-    public function minifyData(Schedule $schedule): array
+    public function organizeData(Schedule $schedule): array
     {
         $arrayStructure = [
             0 => [
@@ -37,24 +37,54 @@ class ScheduleService
         );
         $res = [];
         // Loop throw week days
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i <= 6; $i++) {
             $dayArray = [];
             $sessions = $schedule->getSessions();
             $events = $this->workEventRepository->findByCurrentWeekAndSchedule($schedule);
             foreach ($events as $event) {
                 $eventDay = $event->getFromDate()->format('l');
                 if ($dayNames[$eventDay] === $i) {
-                    $eventTimeStart = $event->getFromDate()->format('H:i');
-                    $dayArray[$i][$eventTimeStart] = $event;
+                    $eventTimeStart = $event->getFromDate()->format('H');
+                    $eventTimeEnd = $event->getToDate()->format('H');
+                    $eventTimeEndDay = $event->getToDate()->format('l');
+                    $startDayNumber = $dayNames[$eventDay];
+                    $endDayNumber = $dayNames[$eventTimeEndDay];
+
+                    $eventDateRangeIndex = 0;
+                    while ($endDayNumber - $startDayNumber >= 0) {
+                        while ($eventDateRangeIndex <= $eventTimeEnd) {
+                            $sessionRangeTime = '';
+                            if ($eventDateRangeIndex < 10)
+                                $sessionRangeTime = '0' . ($eventDateRangeIndex + 0) . ':00';
+                            else
+                                $sessionRangeTime = $eventDateRangeIndex . ':00';
+                            $dayArray[$sessionRangeTime] = ['obj' => $event, 'event' => true];
+                            $eventDateRangeIndex++;
+                        }
+                        $res[$startDayNumber] = $dayArray;
+                        $startDayNumber++;
+                    }
+
                 }
             }
 
             foreach ($sessions as $session) {
                 if (in_array($i, $session->getDays())) {
-                    $dayArray[$i][$session->getFromTime()->format('H:i')] = $session;
+                    $sessionFormHour = $session->getFromTime()->format('H');
+                    $sessionToHour = $session->getToTime()->format('H');
+                    $sessionRangeIndex = $sessionFormHour;
+                    while ($sessionRangeIndex <= $sessionToHour) {
+                        $sessionRangeTime = '';
+                        if ($sessionRangeIndex < 10)
+                            $sessionRangeTime = '0' . ($sessionRangeIndex + 0) . ':00';
+                        else
+                            $sessionRangeTime = $sessionRangeIndex . ':00';
+                        $dayArray[$sessionRangeTime] = ['obj' => $session, 'event' => false];
+                        $sessionRangeIndex++;
+                    }
                 }
             }
-            $res[] = $dayArray;
+            $res[$i] = $dayArray;
         }
         return $res;
     }

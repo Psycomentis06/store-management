@@ -1,4 +1,5 @@
 <div class="container schedule-table-template">
+    {{ dump(data) }}
     <div class="timetable-img text-center">
         <img src="img/content/timetable.png" alt="">
     </div>
@@ -8,169 +9,90 @@
             <tr class="bg-light-gray">
                 <th class="text-uppercase">Time
                 </th>
-                <th class="text-uppercase">Monday</th>
-                <th class="text-uppercase">Tuesday</th>
-                <th class="text-uppercase">Wednesday</th>
-                <th class="text-uppercase">Thursday</th>
-                <th class="text-uppercase">Friday</th>
-                <th class="text-uppercase">Saturday</th>
+                <th class="text-uppercase {{ is_today('Sun', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Sunday
+                </th>
+                <th class="text-uppercase {{ is_today('Mon', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Monday
+                </th>
+                <th class="text-uppercase {{ is_today('Tue', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Tuesday
+                </th>
+                <th class="text-uppercase {{ is_today('Wed', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Wednesday
+                </th>
+                <th class="text-uppercase {{ is_today('Thu', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Thursday
+                </th>
+                <th class="text-uppercase {{ is_today('Fri', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Friday
+                </th>
+                <th class="text-uppercase {{ is_today('Sat', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
+                    Saturday
+                </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td class="align-middle">09:00am</td>
-                <td>
-                    <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Dance</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td>
-                    <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">Marta Healy</div>
-                </td>
+            {% set hours = 8 %}
+            {% set hoursState = hours %}
+            {% for sessionsIndex in 8..31 %}
+                {% set hoursState = (sessionsIndex <= 23 ? sessionsIndex : hours) %}
+                <tr class="">
+                    <td class="align-middle {{ active_hour() == number_to_time(hoursState) ? 'active-hour' : '' }} ">
+                        {% if sessionsIndex < 24 %}
+                            {% set hours = sessionsIndex %}
+                            {{ sessionsIndex | number_to_time }}
+                        {% else %}
+                            {{ hours | number_to_time }}
+                        {% endif %}
+                    </td>
+                    {% for dayColIndex in 0..6 %}
 
-                <td>
-                    <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td>
-                    <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Dance</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td>
-                    <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">Kate Alley</div>
-                </td>
-                <td>
-                    <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                    <div class="margin-10px-top font-size14">9:00-10:00</div>
-                    <div class="font-size13 text-light-gray">James Smith</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="align-middle">10:00am</td>
-                <td>
-                    <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                    <div class="margin-10px-top font-size14">10:00-11:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td class="bg-light-gray">
-
-                </td>
-                <td>
-                    <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                    <div class="margin-10px-top font-size14">10:00-11:00</div>
-                    <div class="font-size13 text-light-gray">Kate Alley</div>
-                </td>
-                <td>
-                    <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                    <div class="margin-10px-top font-size14">10:00-11:00</div>
-                    <div class="font-size13 text-light-gray">Marta Healy</div>
-                </td>
-                <td>
-                    <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                    <div class="margin-10px-top font-size14">10:00-11:00</div>
-                    <div class="font-size13 text-light-gray">James Smith</div>
-                </td>
-                <td class="bg-light-gray">
-
-                </td>
-            </tr>
-
-            <tr>
-                <td class="align-middle">11:00am</td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-                <td>
-                    <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                    <div class="margin-10px-top font-size14">11:00-12:00</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="align-middle">12:00pm</td>
-                <td class="bg-light-gray">
-
-                </td>
-                <td>
-                    <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                    <div class="margin-10px-top font-size14">12:00-1:00</div>
-                    <div class="font-size13 text-light-gray">Kate Alley</div>
-                </td>
-                <td>
-                    <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Dance</span>
-                    <div class="margin-10px-top font-size14">12:00-1:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td>
-                    <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                    <div class="margin-10px-top font-size14">12:00-1:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td class="bg-light-gray">
-
-                </td>
-                <td>
-                    <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                    <div class="margin-10px-top font-size14">12:00-1:00</div>
-                    <div class="font-size13 text-light-gray">Marta Healy</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="align-middle">01:00pm</td>
-                <td>
-                    <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                    <div class="margin-10px-top font-size14">1:00-2:00</div>
-                    <div class="font-size13 text-light-gray">James Smith</div>
-                </td>
-                <td>
-                    <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                    <div class="margin-10px-top font-size14">1:00-2:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-                <td class="bg-light-gray">
-
-                </td>
-                <td>
-                    <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                    <div class="margin-10px-top font-size14">1:00-2:00</div>
-                    <div class="font-size13 text-light-gray">James Smith</div>
-                </td>
-                <td>
-                    <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                    <div class="margin-10px-top font-size14">1:00-2:00</div>
-                    <div class="font-size13 text-light-gray">Marta Healy</div>
-                </td>
-                <td>
-                    <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                    <div class="margin-10px-top font-size14">1:00-2:00</div>
-                    <div class="font-size13 text-light-gray">Ivana Wong</div>
-                </td>
-            </tr>
+                        {% if data[dayColIndex] is not empty and number_to_time(hours) in data[dayColIndex] | keys %}
+                            {% if  data[dayColIndex][number_to_time(hours)]['event'] %}
+                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }}  ">
+                                    {# Events #}
+                                    <button class="btn btn-skyblue btn-block bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                                        {{ data[dayColIndex][number_to_time(hours)]['obj'].title }}
+                                    </button>
+                                    <div class="margin-10px-top font-size14">
+                                        {{ data[dayColIndex][number_to_time(hours)]['obj'].description }}
+                                    </div>
+                                    <div class="font-size13 text-gray">
+                                        Type: {{ data[dayColIndex][number_to_time(hours)]['obj'].type }}
+                                    </div>
+                                </td>
+                            {% else %}
+                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }} ">
+                                    {# Sessions #}
+                                    {% if data[dayColIndex][number_to_time(hours)]['obj'].users | length == 0 %}
+                                        {{ data[dayColIndex][number_to_time(hours)]['obj'].users[0] }}
+                                    {% else %}
+                                        <a href="{{ path('app_user_show', {id: data[dayColIndex][number_to_time(hours)]['obj'].users[0].id }) }}">
+                                            {{ data[dayColIndex][number_to_time(hours)]['obj'].users[0] | upper }}
+                                        </a>
+                                        <div class="margin-10px-top font-size14">
+                                            There is
+                                            ({{ data[dayColIndex][number_to_time(hours)]['obj'].users | length }})
+                                            Workers in this session
+                                        </div>
+                                        <button class="btn btn-success btn-block padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                                            See All
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% else %}
+                            <td {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'class="active-hour" ' : 'style="background-color: #dadada"' }}></td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+                {% if hours == 23 %}
+                    {% set hours = 0 %}
+                {% elseif sessionsIndex >= 24 %}
+                    {% set hours = hours + 1 %}
+                {% endif %}
+            {% endfor %}
             </tbody>
         </table>
     </div>

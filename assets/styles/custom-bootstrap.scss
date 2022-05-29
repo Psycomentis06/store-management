@@ -161,3 +161,11 @@ li.admin-link {
     border-top: 1px solid #dee2e6;
   }
 }
+
+.active-day {
+  background-color: var(--iq-success-200);
+}
+
+.active-hour {
+  background-color: var(--iq-success-200);
+}
