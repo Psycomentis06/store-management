@@ -1,13 +1,10 @@
 <div class="container schedule-table-template">
-    {{ dump(data) }}
-    <div class="timetable-img text-center">
-        <img src="img/content/timetable.png" alt="">
-    </div>
     <div class="table-responsive">
         <table class="table table-bordered text-center">
             <thead>
             <tr class="bg-light-gray">
-                <th class="text-uppercase">Time
+                <th class="text-uppercase">
+                    Time
                 </th>
                 <th class="text-uppercase {{ is_today('Sun', 'DAY_SHORT_NAME') ? 'active-day' : '' }}">
                     Sunday
@@ -38,7 +35,7 @@
             {% for sessionsIndex in 8..31 %}
                 {% set hoursState = (sessionsIndex <= 23 ? sessionsIndex : hours) %}
                 <tr class="">
-                    <td class="align-middle {{ active_hour() == number_to_time(hoursState) ? 'active-hour' : '' }} ">
+                    <td class=" align-middle {{ active_hour() == number_to_time(hoursState) ? 'active-hour' : '' }} ">
                         {% if sessionsIndex < 24 %}
                             {% set hours = sessionsIndex %}
                             {{ sessionsIndex | number_to_time }}
@@ -50,7 +47,7 @@
 
                         {% if data[dayColIndex] is not empty and number_to_time(hours) in data[dayColIndex] | keys %}
                             {% if  data[dayColIndex][number_to_time(hours)]['event'] %}
-                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }}  ">
+                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }} position-relative ">
                                     {# Events #}
                                     <button class="btn btn-skyblue btn-block bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
                                         {{ data[dayColIndex][number_to_time(hours)]['obj'].title }}
@@ -63,22 +60,66 @@
                                     </div>
                                 </td>
                             {% else %}
-                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }} ">
+                                <td class=" {{ active_hour() == number_to_time(hours) and is_today(dayColIndex, 'DAY_WEEK_INDEX') ? 'active-hour' : '' }} position-relative schedule-case ">
                                     {# Sessions #}
+                                    {% if allow_edit is defined and allow_edit is not empty or allow_edit is defined and allow_edit is not empty %}
+                                        <div class="schedule-case-action">
+                                            {% if allow_edit is not empty and allow_edit %}
+                                                <button class="btn btn-success" data-toggle="tooltip"
+                                                        data-placement="top"
+                                                        data-original-title="Edit Session" title>
+                                                    <i class="las la-edit"></i>
+                                                </button>
+                                            {% endif %}
+                                            {% if allow_delete is not empty and allow_delete %}
+                                                <button class="btn btn-danger" data-toggle="tooltip"
+                                                        data-placement="top"
+                                                        data-original-title="Delete Session" title>
+                                                    <i class="las la-trash"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                     {% if data[dayColIndex][number_to_time(hours)]['obj'].users | length == 0 %}
                                         {{ data[dayColIndex][number_to_time(hours)]['obj'].users[0] }}
                                     {% else %}
-                                        <a href="{{ path('app_user_show', {id: data[dayColIndex][number_to_time(hours)]['obj'].users[0].id }) }}">
+                                        {#  <a href="{{ path('app_user_show', {id: data[dayColIndex][number_to_time(hours)]['obj'].users[0].id }) }}">
                                             {{ data[dayColIndex][number_to_time(hours)]['obj'].users[0] | upper }}
-                                        </a>
+                                        </a> #}
                                         <div class="margin-10px-top font-size14">
                                             There is
                                             ({{ data[dayColIndex][number_to_time(hours)]['obj'].users | length }})
-                                            Workers in this session
+                                            Worker(s) in this session
                                         </div>
-                                        <button class="btn btn-success btn-block padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">
+                                        <button class="btn btn-success btn-block padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13"
+                                                data-toggle="modal" data-target="#session-users-modal-{{ hoursState }}">
                                             See All
                                         </button>
+                                        <div class="modal fade" id="session-users-modal-{{ hoursState }}" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel"
+                                             style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Workers in this
+                                                            session</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul class="list-unstyled">
+                                                            {% for user in data[dayColIndex][number_to_time(hours)]['obj'].users %}
+                                                                <li>
+                                                                    <a href="{{ path('app_user_show', {id: user.id}) }}"> {{ "#{user.username} ❘ #{user.email}" }} </a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 </td>
                             {% endif %}

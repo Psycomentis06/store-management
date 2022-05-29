@@ -170,33 +170,92 @@ class StoreController extends CustomAbstractController
     ]
     public function storeSchedule(Request $request, WorkEventRepository $workEventRepository, WorkSessionRepository $workSessionRepository, Schedule $schedule, ScheduleService $scheduleService): Response
     {
-        $scheduleOrganised = $scheduleService->organizeData($schedule);
-
         $workEvent = new WorkEvent();
         $createEventForm = $this->createForm(WorkEventType::class, $workEvent);
 
         $createEventForm->handleRequest($request);
-        if ($createEventForm->isSubmitted() && $createEventForm->isValid()) {
-            $workEvent->addSchedule($schedule);
-            $workEventRepository->add($workEvent);
-            $this->addFlash('success', 'New event is created');
+        if ($createEventForm->isSubmitted()) {
+            if ($createEventForm->isValid()) {
+                $workEvent->addSchedule($schedule);
+                $workEventRepository->add($workEvent);
+                $this->addFlash('success', 'New event is created');
+            } else {
+                $this->addFlash('error', 'Creating new event is failed for more info click \'Add New Event\' button for more info');
+            }
         }
 
         $workSession = new WorkSession();
 
         $createSessionForm = $this->createForm(WorkSessionType::class, $workSession);
         $createSessionForm->handleRequest($request);
-        if ($createSessionForm->isSubmitted() && $createSessionForm->isValid()) {
-            $workSession->setSchedule($schedule);
-            $workSessionRepository->add($workSession);
-            $this->addFlash('success', 'New Session is created');
+        if ($createSessionForm->isSubmitted()) {
+            if ($createSessionForm->isValid()) {
+                $workSession->setSchedule($schedule);
+                $workSessionRepository->add($workSession);
+                $this->addFlash('success', 'New Session is created');
+            } else {
+                $this->addFlash('error', 'Creating new Session was failed. for more info click \' Add New Session \' button ');
+            }
         }
 
+        $scheduleOrganised = $scheduleService->organizeData($schedule);
         return $this->render('schedule/show.html.twig', [
             'schedule' => $schedule,
             'eventForm' => $createEventForm->createView(),
             'sessionForm' => $createSessionForm->createView(),
-            'data' => $scheduleOrganised
+            'data' => $scheduleOrganised,
+            'allow_edit' => true,
+            'allow_delete' => true
         ]);
+    }
+
+    #[Route(
+        '/work_session/{id}',
+        name: 'app_schedule_session_edit',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Edit Given schedule session",
+            "role" => "superadmin"
+        ],
+        methods: ['GET', 'POST'])
+    ]
+    function editSession(Request $request, WorkSession $workSession, WorkSessionRepository $workSessionRepository): Response
+    {
+        $form = $this->createForm(WorkSessionType::class, $workSession);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $workSessionRepository->add($workSession);
+            $this->addFlash('success', 'Session edited successfully');
+        }
+
+        return $this->render('schedule/edit-session.html.twig', [
+            'form' => $form->createView(),
+            'session' => $workSession
+        ]);
+    }
+
+    #[Route(
+        '/work_session/{id}',
+        name: 'app_schedule_session_delete',
+        options: [
+            "system" => 'false'
+        ],
+        defaults: [
+            "description" => "Delete Given schedule session",
+            "role" => "superadmin"
+        ],
+        methods: ['POST'])
+    ]
+    public function deleteSession(Request $request, WorkSession $workSession, WorkSessionRepository $workSessionRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $workSession->getId(), $request->request->get('_token'))) {
+            $workSessionRepository->remove($workSession);
+            $this->addFlash('success', 'Customer removed');
+        }
+
+        return $this->redirectToRoute('app_store_index', [], Response::HTTP_SEE_OTHER);
     }
 }

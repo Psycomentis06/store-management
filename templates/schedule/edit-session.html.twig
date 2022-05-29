@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Work Session{% endblock %}
+
+{% block body %}
+    <h1>Edit Work Session</h1>
+
+    {{ include('schedule/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_store_index') }}">Back to store page</a>
+
+    {{ include('store/_delete_form.html.twig') }}
+{% endblock %}
