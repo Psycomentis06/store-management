@@ -110,8 +110,17 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $loginDate = (new \DateTime());
+        $this->redis->set(RedisKeys::getLastLoginKey($request->request->get('userId')), $loginDate->format('Y-m-d H:i:s'));
         $this->redis->set(RedisKeys::getSessionId($request->request->get('userId')), $request->getSession()->getId());
-        return null;
+        $token->setAttribute('last_login', $loginDate->format('Y-m-d H:i:s'));
+        $token->setAttribute('first_time', true);
+        $user = $token->getUser();
+        if ($user instanceof User) {
+            $user->setLastLogin($loginDate);
+            $this->userRepository->add($user);
+        }
+        return new RedirectResponse('/');
     }
 
     public function onAuthenticationFailure(Request $request, \Symfony\Component\Security\Core\Exception\AuthenticationException $exception): Response

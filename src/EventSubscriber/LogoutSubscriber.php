@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Entity\User;
 use App\Utils\RedisKeys;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,7 +28,13 @@ class LogoutSubscriber implements EventSubscriberInterface
     public function onLogout(LogoutEvent $event)
     {
         $userId = $event->getToken()->getUserIdentifier();
-        if (!empty($userId))
-            $this->redis->del(RedisKeys::getSessionId($userId));
+        $event->getToken()->getAttribute('clear_session_key');
+        $user = $event->getToken()->getUser();
+        if ($user instanceof User) {
+            $userLastLogin = $user->getLastLogin()->format('Y-m-d H:i:s');
+            $tokenLastLogin = $event->getToken()->getAttribute('last_login');
+            if (($userLastLogin === $tokenLastLogin) && !empty($userId))
+                $this->redis->del(RedisKeys::getSessionId($userId));
+        }
     }
 }

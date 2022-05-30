@@ -46,11 +46,12 @@ class TokenFormAuthenticator extends AbstractAuthenticator
         $csrfToken = $request->request->get('_csrf_token');
 
         return new Passport(
-            new UserBadge($login, function ($userIdentifier) {
+            new UserBadge($login, function ($userIdentifier) use ($request) {
                 $user = $this->userRepository->findOneByIdOrUsernameOrEmail($userIdentifier);
                 if (!$user instanceof UserInterface) {
                     throw new UserNotFoundException("User $userIdentifier not found");
                 }
+                $request->request->set('userId', $user->getId());
                 return $user;
             }),
             new CustomCredentials(function ($credentials, User $user) use ($request) {
@@ -65,6 +66,15 @@ class TokenFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $loginDate = (new \DateTime());
+        $this->redis->set(RedisKeys::getLastLoginKey($request->request->get('userId')), $loginDate->format('Y-m-d H:i:s'));
+        $token->setAttribute('last_login', $loginDate->format('Y-m-d H:i:s'));
+        $token->setAttribute('first_time', true);
+        $user = $token->getUser();
+        if ($user instanceof User) {
+            $user->setLastLogin($loginDate);
+            $this->userRepository->add($user);
+        }
         return new RedirectResponse('/');
     }
 
