@@ -32,6 +32,7 @@
             <tbody>
             {% set hours = 8 %}
             {% set hoursState = hours %}
+            {% set sessionSeeAllModalIdIndex = 0 %}
             {% for sessionsIndex in 8..31 %}
                 {% set hoursState = (sessionsIndex <= 23 ? sessionsIndex : hours) %}
                 <tr class="">
@@ -92,10 +93,10 @@
                                             Worker(s) in this session
                                         </div>
                                         <button class="btn btn-success btn-block padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13"
-                                                data-toggle="modal" data-target="#session-users-modal-{{ hoursState }}">
+                                                data-toggle="modal" data-target="#session-users-modal-{{ hoursState }}-{{ sessionSeeAllModalIdIndex }}">
                                             See All
                                         </button>
-                                        <div class="modal fade" id="session-users-modal-{{ hoursState }}" tabindex="-1"
+                                        <div class="modal fade" id="session-users-modal-{{ hoursState }}-{{ sessionSeeAllModalIdIndex }}" tabindex="-1"
                                              aria-labelledby="exampleModalLabel"
                                              style="display: none;" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -120,6 +121,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% set sessionSeeAllModalIdIndex = sessionSeeAllModalIdIndex+1 %}
                                     {% endif %}
                                 </td>
                             {% endif %}

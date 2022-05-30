@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Service\TimeService;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -9,10 +10,12 @@ use Twig\TwigFunction;
 class ActiveHour extends AbstractExtension
 {
     private RequestStack $requestStack;
+    private TimeService $timeService;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, TimeService $timeService)
     {
         $this->requestStack = $requestStack;
+        $this->timeService = $timeService;
     }
 
     public function getFunctions(): array
@@ -24,13 +27,6 @@ class ActiveHour extends AbstractExtension
 
     public function activeHour(): string
     {
-        $clientTimeZone = $this->requestStack->getMainRequest()->headers->get('tz_offset');
-        $time = new \DateTime();
-        if (empty($clientTimeZone)) {
-            $timezoneName = timezone_name_from_abbr("", $clientTimeZone * 3600, false);
-            $time = new \DateTimeZone($timezoneName);
-        } else
-            $time = new \DateTimeZone('UTC');
-        return ((new \DateTime('now', $time))->format('H:00'));
+        return $this->timeService->getUserTimeZone()->format('H:00');
     }
 }

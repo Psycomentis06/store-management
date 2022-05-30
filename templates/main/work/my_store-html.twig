@@ -1,0 +1,104 @@
+{% extends 'main/base.html.twig' %}
+
+{% block title %}My Store{% endblock %}
+
+{% block body %}
+    <div class="text-center m-3" id="current-time"></div>
+
+    {% if sessions | length == 1 %}
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>Id</th>
+                <td> {{ sessions[0].schedule.store.id }} </td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>
+                    {{ sessions[0].schedule.store.name }}
+                </td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>
+                    <ul class="list-unstyled">
+                        {% if sessions[0].schedule.store.address is not empty %}
+                            {% for i in sessions[0].schedule.store.address %}
+                                <li><strong>{{ i.key }} :</strong> {{ i.value }} </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    {% elseif sessions | length > 0 %}
+        <h1 class="h3 text-center"> You are assigned to more than one ({{ sessions | length }}) store at this session </h1>
+        <div class="container my-2">
+        {% for session in sessions %}
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                {{ session.schedule.store.name }}
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                         data-parent="#accordionExample">
+                        <div class="card-body">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>Id</th>
+                                    <td> {{ session.schedule.store.id }} </td>
+                                </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>
+                                        {{ session.schedule.store.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Address</th>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            {% if session.schedule.store.address is not empty %}
+                                                {% for i in session.schedule.store.address %}
+                                                    <li><strong>{{ i.key }} :</strong> {{ i.value }} </li>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="container"
+             style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center">
+            <div>
+                <h1 class="text-center"> No Work! You are free this session </h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        window.onload = () => {
+            let el = document.getElementById('current-time')
+            setInterval(() => {
+                el.innerText = new Date().toTimeString();
+            }, 60)
+        }
+    </script>
+{% endblock %}

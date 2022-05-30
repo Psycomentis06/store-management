@@ -68,25 +68,25 @@
                             <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
                         </a>
                         <ul id="mystore" class="iq-submenu collapse">
-                            {% if can_access_route('app_user_index') %}
-                                <li class="{{ is_route_active('app_user_index') }}">
-                                    <a href={{ path('app_user_index') }}>
+                            {% if can_access_route('app_my_store') %}
+                                <li class="{{ is_route_active('app_my_store') }}">
+                                    <a href={{ path('app_my_store') }}>
                                         <i class="la la-users-cog" style="font-size: x-large"></i>
                                         <span>My Store</span>
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if can_access_route('app_role_index') %}
-                                <li class="{{ is_route_active('app_role_index') }}">
-                                    <a href={{ path('app_role_index') }}>
+                            {% if can_access_route('app_my_schedule') %}
+                                <li class="{{ is_route_active('app_my_schedule') }}">
+                                    <a href={{ path('app_my_schedule') }}>
                                         <i class="la la-user-tag" style="font-size: x-large"></i>
                                         <span>My Schedule</span>
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if can_access_route('app_role_index') %}
-                                <li class="{{ is_route_active('app_role_index') }}">
-                                    <a href={{ path('app_role_index') }}>
+                            {% if can_access_route('app_my_inventory') %}
+                                <li class="{{ is_route_active('app_my_inventory') }}">
+                                    <a href={{ path('app_my_inventory') }}>
                                         <i class="la la-user-tag" style="font-size: x-large"></i>
                                         <span>My Store Inventory</span>
                                     </a>

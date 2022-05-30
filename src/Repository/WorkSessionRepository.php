@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\WorkSession;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -75,4 +78,23 @@ class WorkSessionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllByUserAndCurrentTime(User $user, \DateTime $time = null)
+    {
+        /*return $this->createQueryBuilder('ws')
+            ->join('ws.users', 'u', Join::WITH, 'u.id = :user')
+            ->setParameter('user', $user)
+            ->join('ws.schedule', 'sc')
+            ->where(' YEARWEEK(:curdate) between YEARWEEK(ws.fromTime) AND YEARWEEK()');
+        */
+        if (empty($time))
+            $time = new \DateTime();
+        return $this->createQueryBuilder('ws')
+            ->join('ws.users', 'u', Join::WITH, 'u.id = :user')
+            ->setParameter('user', $user->getId())
+            ->where(' :time BETWEEN ws.fromTime AND ws.toTime ')
+            ->setParameter('time', $time)
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_OBJECT);
+    }
 }
