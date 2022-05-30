@@ -28,7 +28,6 @@ class LogoutSubscriber implements EventSubscriberInterface
     public function onLogout(LogoutEvent $event)
     {
         $userId = $event->getToken()->getUserIdentifier();
-        $event->getToken()->getAttribute('clear_session_key');
         $user = $event->getToken()->getUser();
         if ($user instanceof User) {
             $userLastLogin = $user->getLastLogin()->format('Y-m-d H:i:s');
