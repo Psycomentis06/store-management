@@ -48,11 +48,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
     #[ORM\ManyToMany(targetEntity: WorkSession::class, mappedBy: 'users')]
     private Collection $workSessions;
 
-    #[Pure] public function __construct()
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private \DateTimeInterface $lastLogin;
+
+    public function __construct()
     {
         $this->roles = new ArrayCollection([]);
         $this->digitalPurchases = new ArrayCollection();
         $this->workSessions = new ArrayCollection();
+        $this->lastLogin = new \DateTime();
     }
 
     public static function getDefaultSearchFieldName(): string
@@ -294,6 +298,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Searcha
         if ($this->workSessions->removeElement($workSession)) {
             $workSession->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTimeInterface $lastLogin): self
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }
