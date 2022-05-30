@@ -178,7 +178,7 @@ class StoreController extends CustomAbstractController
             if ($createEventForm->isValid()) {
                 $workEvent->addSchedule($schedule);
                 $workEventRepository->add($workEvent);
-                $this->addFlash('success', 'New event is created');
+                $this->addFlash('success', 'New event is created. Refresh page to see changes');
             } else {
                 $this->addFlash('error', 'Creating new event is failed for more info click \'Add New Event\' button for more info');
             }
@@ -190,9 +190,17 @@ class StoreController extends CustomAbstractController
         $createSessionForm->handleRequest($request);
         if ($createSessionForm->isSubmitted()) {
             if ($createSessionForm->isValid()) {
-                $workSession->setSchedule($schedule);
-                $workSessionRepository->add($workSession);
-                $this->addFlash('success', 'New Session is created');
+                if (count($workSession->getUsers()) === 0) {
+                    $this->addFlash('error', 'Creating Session failed: At least 1 user should be attached');
+                } else {
+                    if (count($workSession->getDays()) === 0) {
+                        $this->addFlash('error', 'No day(s) selected for this session');
+                    } else {
+                        $workSession->setSchedule($schedule);
+                        $workSessionRepository->add($workSession);
+                        $this->addFlash('success', 'New Session is created, Refresh page to see new changes');
+                    }
+                }
             } else {
                 $this->addFlash('error', 'Creating new Session was failed. for more info click \' Add New Session \' button ');
             }
