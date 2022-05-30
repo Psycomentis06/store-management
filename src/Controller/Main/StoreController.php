@@ -176,6 +176,12 @@ class StoreController extends CustomAbstractController
         $createEventForm->handleRequest($request);
         if ($createEventForm->isSubmitted()) {
             if ($createEventForm->isValid()) {
+                $workEvent->setFromDate(
+                    new \DateTime($workEvent->getFromDate()->format('Y:m:d H:00:00'))
+                );
+                $workEvent->setToDate(
+                    new \DateTime($workEvent->getToDate()->format('Y:m:d H:00:00'))
+                );
                 $workEvent->addSchedule($schedule);
                 $workEventRepository->add($workEvent);
                 $this->addFlash('success', 'New event is created. Refresh page to see changes');
@@ -196,6 +202,13 @@ class StoreController extends CustomAbstractController
                     if (count($workSession->getDays()) === 0) {
                         $this->addFlash('error', 'No day(s) selected for this session');
                     } else {
+
+                        $workSession->setFromTime(
+                            new \DateTime($workSession->getFromTime()->format('H:00'))
+                        );
+                        $workSession->setToTime(
+                            new \DateTime($workSession->getToTime()->format('H:00'))
+                        );
                         $workSession->setSchedule($schedule);
                         $workSessionRepository->add($workSession);
                         $this->addFlash('success', 'New Session is created, Refresh page to see new changes');

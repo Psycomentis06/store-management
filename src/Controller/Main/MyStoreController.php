@@ -2,11 +2,11 @@
 
 namespace App\Controller\Main;
 
-use App\Entity\User;
-use App\Repository\WorkSessionRepository;
-use App\Service\TimeService;
-use App\Service\WorkSessionService;
+use App\Repository\StoreRepository;
+use App\Service\ScheduleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -32,16 +32,22 @@ class MyStoreController extends AbstractController
         ],
         methods: ['GET']
     )]
-    public function myStore(WorkSessionRepository $workSessionRepository, TimeService $timeService, WorkSessionService $workSessionService)
+    public function myStore(Request $request, StoreRepository $storeRepository): Response
     {
-        $currUser = $this->getUser();
-        $currentSessions = [];
-        if (!empty($currUser) && $currUser instanceof User) {
-            $sessions = $workSessionRepository->findAllByUserAndCurrentTime($currUser, $timeService->getUserTimeZone());
-            $currentSessions = $workSessionService->filterCurrentSession($sessions);
+        $session = $request->getSession();
+        $storeId = $session->get('_default-store');
+        $store = null;
+        if (empty($storeId)) {
+            $this->addFlash('warning', 'No Store is set by default it\'s either you don\'t have an actual active session to select  ');
+        } else {
+            $store = $storeRepository->find($storeId);
+            if (empty($store)) {
+                $this->addFlash('error', 'No Store found with given id "' . $storeId . '"');
+            }
         }
+
         return $this->render('main/work/my_store-html.twig', [
-            'sessions' => $currentSessions
+            'store' => $store
         ]);
     }
 
@@ -57,16 +63,25 @@ class MyStoreController extends AbstractController
         ],
         methods: ['GET']
     )]
-    public function mySchedule(WorkSessionRepository $workSessionRepository, TimeService $timeService, WorkSessionService $workSessionService): \Symfony\Component\HttpFoundation\Response
+    public function mySchedule(Request $request, StoreRepository $storeRepository, ScheduleService $scheduleService): Response
     {
-        $currUser = $this->getUser();
-        $currentSessions = [];
-        if (!empty($currUser) && $currUser instanceof User) {
-            $sessions = $workSessionRepository->findAllByUserAndCurrentTime($currUser, $timeService->getUserTimeZone());
-            $currentSessions = $workSessionService->filterCurrentSession($sessions);
+        $session = $request->getSession();
+        $storeId = $session->get('_default-store');
+        $store = null;
+        $scheduleOrganised = null;
+        if (empty($storeId)) {
+            $this->addFlash('warning', 'No Store is set by default it\'s either you don\'t have an actual active session to select  ');
+        } else {
+            $store = $storeRepository->find($storeId);
+            if (empty($store)) {
+                $this->addFlash('error', 'No Store found with given id "' . $storeId . '"');
+            } else {
+                $scheduleOrganised = $scheduleService->organizeData($store->getSchedule());
+            }
         }
+
         return $this->render('main/work/my_schedule.html.twig', [
-            'sessions' => $currentSessions
+            'data' => $scheduleOrganised
         ]);
     }
 
@@ -82,16 +97,26 @@ class MyStoreController extends AbstractController
         ],
         methods: ['GET']
     )]
-    public function myStoreInventory(WorkSessionRepository $workSessionRepository, TimeService $timeService, WorkSessionService $workSessionService): \Symfony\Component\HttpFoundation\Response
+    public function myStoreInventory(Request $request, StoreRepository $storeRepository): Response
     {
-        $currUser = $this->getUser();
-        $currentSessions = [];
-        if (!empty($currUser) && $currUser instanceof User) {
-            $sessions = $workSessionRepository->findAllByUserAndCurrentTime($currUser, $timeService->getUserTimeZone());
-            $currentSessions = $workSessionService->filterCurrentSession($sessions);
+        $session = $request->getSession();
+        $storeId = $session->get('_default-store');
+        $store = null;
+        $inventory = null;
+        if (empty($storeId)) {
+            $this->addFlash('warning', 'No Store is set by default it\'s either you don\'t have an actual active session to select  ');
+        } else {
+            $store = $storeRepository->find($storeId);
+            if (empty($store)) {
+                $this->addFlash('error', 'No Store found with given id "' . $storeId . '"');
+            } else {
+                $inventory = $store->getInventory();
+                //dd($inventory->getId());
+            }
         }
+
         return $this->render('main/work/my_inventory.html.twig', [
-            'sessions' => $currentSessions
+            'inventory' => $inventory
         ]);
     }
 }

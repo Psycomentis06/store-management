@@ -3,5 +3,34 @@
 {% block title %}My Inventory{% endblock %}
 
 {% block body %}
-
+    {% if inventory is not empty %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Stock</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for inventoryItem in inventory.items %}
+                <tr>
+                    <td>
+                        <a href="{{ inventoryItem.product ? path('app_product_show', {'id': inventoryItem.product.id}) : path('app_inventory_index') }}"> {{ inventoryItem.product ? inventoryItem.product.id : '' }} </a>
+                    </td>
+                    <td>
+                        {{ inventoryItem.product ? inventoryItem.product.name : '' }}
+                    </td>
+                    <td>
+                        {{ inventoryItem.stock == 0 ? 'Out of Stock' : inventoryItem.stock }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock body %}

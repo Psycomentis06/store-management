@@ -71,7 +71,7 @@
                             {% if can_access_route('app_my_store') %}
                                 <li class="{{ is_route_active('app_my_store') }}">
                                     <a href={{ path('app_my_store') }}>
-                                        <i class="la la-users-cog" style="font-size: x-large"></i>
+                                        <i class="la la-store" style="font-size: x-large"></i>
                                         <span>My Store</span>
                                     </a>
                                 </li>
@@ -79,7 +79,7 @@
                             {% if can_access_route('app_my_schedule') %}
                                 <li class="{{ is_route_active('app_my_schedule') }}">
                                     <a href={{ path('app_my_schedule') }}>
-                                        <i class="la la-user-tag" style="font-size: x-large"></i>
+                                        <i class="la la-calendar-week" style="font-size: x-large"></i>
                                         <span>My Schedule</span>
                                     </a>
                                 </li>
@@ -87,7 +87,7 @@
                             {% if can_access_route('app_my_inventory') %}
                                 <li class="{{ is_route_active('app_my_inventory') }}">
                                     <a href={{ path('app_my_inventory') }}>
-                                        <i class="la la-user-tag" style="font-size: x-large"></i>
+                                        <i class="la la-th-list" style="font-size: x-large"></i>
                                         <span>My Store Inventory</span>
                                     </a>
                                 </li>
@@ -229,6 +229,27 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ml-auto navbar-list align-items-center">
+                            <li class="mx-2">
+                                {% set sessions = current_user_current_working_sessions() %}
+                                {% if sessions | length > 0 %}
+                                    <form name="_default-store-form" action="{{ path('config_default_store') }}"
+                                          method="post" class="">
+                                        <select class="form-control" name="_default-store-form-select"
+                                                id="store-default-select">
+                                            <option value="">No Store selected</option>
+                                            {% for session in sessions %}
+                                                {% set defaultStore = app.session.get('_default-store') %}
+                                                <option {{ defaultStore is defined and defaultStore is not empty ? 'selected' : '' }}
+                                                        value="{{ session.schedule.store.id }}"> {{ session.schedule.store.name }} </option>
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                {% else %}
+                                    <span class="btn bg-secondary-light mt-1">
+                                        No Active Session
+                                    </span>
+                                {% endif %}
+                            </li>
                             <!-- Search box -->
                             <li>
                                 <div class="device-search">
@@ -487,6 +508,16 @@
                 </div>
             </div>
         {% endfor %}
+        {% for msg in app.flashes('warning') %}
+            <div class="alert alert-warning" role="alert">
+                <div class="iq-alert-icon">
+                    <i class="las la-check-circle"></i>
+                </div>
+                <div class="iq-alert-text">
+                    {{ msg }}
+                </div>
+            </div>
+        {% endfor %}
         {% for msg in app.flashes('error') %}
             <div class="alert alert-danger" role="alert">
                 <div class="iq-alert-icon">
@@ -516,5 +547,24 @@
         </div>
     </div>
 </footer>
+
+<script>
+    window.onload = () => {
+        // Default store select
+        let storeForm = document.forms['_default-store-form'];
+        let storeFormSelect = document.getElementById('store-default-select')
+        if (storeForm && storeFormSelect) {
+            storeFormSelect.addEventListener('change', () => {
+                storeForm.submit()
+            })
+        }
+
+        // Timer
+        let el = document.getElementById('current-time')
+        setInterval(() => {
+            el.innerText = new Date().toTimeString();
+        }, 60)
+    }
+</script>
 </body>
 </html>

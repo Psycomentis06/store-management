@@ -89,6 +89,7 @@ class WorkSessionRepository extends ServiceEntityRepository
         */
         if (empty($time))
             $time = new \DateTime();
+        $time = $time->format('H:00:00');
         return $this->createQueryBuilder('ws')
             ->join('ws.users', 'u', Join::WITH, 'u.id = :user')
             ->setParameter('user', $user->getId())

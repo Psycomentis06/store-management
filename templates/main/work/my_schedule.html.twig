@@ -3,5 +3,7 @@
 {% block title %}My Store{% endblock %}
 
 {% block body %}
-
+    {% if data is not empty %}
+        {{ include('schedule/_schedule-table.html.twig') }}
+    {% endif %}
 {% endblock body %}
