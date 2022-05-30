@@ -48,7 +48,7 @@ class Product implements SearchableEntityInterface
     private Currency $currency;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: InventoryItem::class)]
-    private $inventoryItems;
+    private Collection $inventoryItems;
 
 
     #[Pure]

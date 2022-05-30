@@ -5,12 +5,42 @@
 {% block body %}
     <h1>Inventory</h1>
 
+    <div class="my-3">
+        <a href="{{ path('app_inventory_item_new', {id: inventory.id}) }}" class="btn btn-outline-secondary"> Add
+            Product to this inventory</a>
+    </div>
+
     <table class="table">
+        <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
         <tbody>
+        {% for inventoryItem in inventory.items %}
             <tr>
-                <th>Id</th>
-                <td>{{ inventory.id }}</td>
+                <td>
+                    <a href="{{ inventoryItem.product ? path('app_product_show', {'id': inventoryItem.product.id}) : path('app_inventory_index') }}"> {{ inventoryItem.product ? inventoryItem.product.id : '' }} </a>
+                </td>
+                <td>
+                    {{ inventoryItem.product ? inventoryItem.product.name : '' }}
+                </td>
+                <td>
+                    {{ inventoryItem.stock == 0 ? 'Out of Stock' : inventoryItem.stock }}
+                </td>
+                <td>
+                    <a href="{{ path('app_inventory_item_edit', {'inventoryId': inventory.id, 'inventoryItemId': inventoryItem.id}) }}">Edit</a>
+                    <a href="{{ path('app_inventory_item_delete', {'inventoryId': inventory.id, 'inventoryItemId': inventoryItem.id}) }}">Delete</a>
+                </td>
             </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 

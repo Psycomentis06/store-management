@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\InventoryItemRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 
@@ -18,17 +16,16 @@ class InventoryItem
 
 
     #[ORM\Column(type: 'integer')]
-    private ?int $stock;
+    private ?int $stock = 0;
 
     #[ORM\ManyToOne(targetEntity: Inventory::class, inversedBy: 'items')]
     private Inventory $inventory;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'inventoryItems')]
-    private $product;
+    private Product $product;
 
     #[Pure] public function __construct()
     {
-        $this->product = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -36,14 +33,18 @@ class InventoryItem
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProduct(): Collection
+
+    public function getProduct(): Product
     {
         return $this->product;
     }
 
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
+
+        return $this;
+    }
 
     public function getStock(): ?int
     {
@@ -65,13 +66,6 @@ class InventoryItem
     public function setInventory(?Inventory $inventory): self
     {
         $this->inventory = $inventory;
-
-        return $this;
-    }
-
-    public function setProduct(?Product $product): self
-    {
-        $this->product = $product;
 
         return $this;
     }
