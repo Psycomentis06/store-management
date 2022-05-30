@@ -16,14 +16,15 @@ class InventoryItem
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'inventoryItems')]
-    private Collection $product;
 
     #[ORM\Column(type: 'integer')]
     private ?int $stock;
 
     #[ORM\ManyToOne(targetEntity: Inventory::class, inversedBy: 'items')]
     private Inventory $inventory;
+
+    #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'inventoryItems')]
+    private $product;
 
     #[Pure] public function __construct()
     {
@@ -43,21 +44,6 @@ class InventoryItem
         return $this->product;
     }
 
-    public function addProduct(Product $product): self
-    {
-        if (!$this->product->contains($product)) {
-            $this->product[] = $product;
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        $this->product->removeElement($product);
-
-        return $this;
-    }
 
     public function getStock(): ?int
     {
@@ -79,6 +65,13 @@ class InventoryItem
     public function setInventory(?Inventory $inventory): self
     {
         $this->inventory = $inventory;
+
+        return $this;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }

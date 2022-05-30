@@ -47,10 +47,12 @@ class Product implements SearchableEntityInterface
     #[ORM\ManyToOne(targetEntity: Currency::class, inversedBy: 'products')]
     private Currency $currency;
 
-    #[ORM\ManyToMany(targetEntity: InventoryItem::class, mappedBy: 'product')]
-    private Collection $inventoryItems;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: InventoryItem::class)]
+    private $inventoryItems;
 
-    #[Pure] public function __construct()
+
+    #[Pure]
+    public function __construct()
     {
         $this->inventoryItems = new ArrayCollection();
     }
@@ -212,7 +214,7 @@ class Product implements SearchableEntityInterface
     {
         if (!$this->inventoryItems->contains($inventoryItem)) {
             $this->inventoryItems[] = $inventoryItem;
-            $inventoryItem->addProduct($this);
+            $inventoryItem->setProduct($this);
         }
 
         return $this;
@@ -221,9 +223,13 @@ class Product implements SearchableEntityInterface
     public function removeInventoryItem(InventoryItem $inventoryItem): self
     {
         if ($this->inventoryItems->removeElement($inventoryItem)) {
-            $inventoryItem->removeProduct($this);
+            // set the owning side to null (unless already changed)
+            if ($inventoryItem->getProduct() === $this) {
+                $inventoryItem->setProduct(null);
+            }
         }
 
         return $this;
     }
+
 }
